@@ -44,7 +44,8 @@ export default async function EventPage({ params }: { params: { id: string } }) 
         </button>
         {!isFree && (
           <p style={{ fontSize: 12, color: "var(--ink-soft)", marginTop: 8 }}>
-            You'll be taken to Stripe's secure checkout to pay by card.
+            You'll be taken to Stripe's secure checkout to pay by card or scan a Thai QR
+            (PromptPay) with your banking app.
           </p>
         )}
       </form>

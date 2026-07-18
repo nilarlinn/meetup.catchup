@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase-admin";
+import { sendTicketConfirmationEmail } from "@/lib/email";
 
 // Stripe calls this URL directly (not from a browser), so we must read the
 // raw request body to verify the signature — Next.js route handlers give
@@ -29,15 +30,32 @@ export async function POST(request: Request) {
     const session = event.data.object as any;
     const admin = createAdminClient();
 
-    const { error } = await admin
+    // Update the ticket, then fetch it back (with its event) so we have
+    // everything needed to send the confirmation email.
+    const { data: ticket, error } = await admin
       .from("tickets")
       .update({ status: "paid" })
-      .eq("stripe_session_id", session.id);
+      .eq("stripe_session_id", session.id)
+      .select("*, events(*)")
+      .single();
 
-    if (error) {
+    if (error || !ticket) {
       console.error("Failed to mark ticket paid:", error);
       // Return 500 so Stripe retries the webhook automatically.
       return NextResponse.json({ error: "DB update failed" }, { status: 500 });
+    }
+
+    const ev = ticket.events;
+    if (ev) {
+      await sendTicketConfirmationEmail({
+        to: ticket.email,
+        name: ticket.name,
+        eventTitle: ev.title,
+        eventWhen: `${ev.day} ${ev.month}`,
+        eventWhere: ev.location,
+        paid: true,
+        priceLabel: `฿${Number(ev.price_baht).toFixed(0)}`,
+      });
     }
   }
 

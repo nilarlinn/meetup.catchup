@@ -60,7 +60,45 @@ with git: create the repo on github.com, then in this folder run
 4. Only once that works, swap `STRIPE_SECRET_KEY` for your **live** secret key (and repeat step 5
    with a live-mode webhook) to start accepting real money.
 
-## What this gets you that the earlier prototype didn't
+## 7. Turn on Thai QR payments (PromptPay)
+Card payments work already — this step adds PromptPay so customers can scan a real Thai QR
+code and pay from their banking app.
+1. In your Stripe dashboard: **Settings → Payment methods**
+2. Find **PromptPay** in the list and toggle it **on**
+3. That's it — the code already requests both `card` and `promptpay` as options, so once
+   enabled here, customers checking out will see both as choices on Stripe's checkout page.
+
+## 8. Turn on confirmation emails (Resend)
+Right now, paid events only get Stripe's generic receipt email, and free events get no email
+at all. This step adds a real "You're confirmed!" email for both.
+1. Go to **resend.com** → sign up (free tier is generous — 3,000 emails/month)
+2. Go to **API Keys** → **Create API Key** → copy it
+3. In Vercel, add a new Environment Variable:
+   ```
+   RESEND_API_KEY = re_xxxxxxxx
+   ```
+4. For now, leave `FROM_EMAIL` unset — the code falls back to Resend's shared test address,
+   which works immediately but looks generic (`onboarding@resend.dev`).
+5. **Optional, for a proper branded sender address:** in Resend, go to **Domains → Add Domain**,
+   enter your domain, and add the DNS records it gives you (same place you manage your domain's
+   DNS, wherever you bought it). Once verified (can take a few minutes to a few hours), add
+   this Environment Variable in Vercel:
+   ```
+   FROM_EMAIL = Meetup Catch Up <events@yourdomain.com>
+   ```
+6. Redeploy after adding these variables (Vercel → Deployments → latest → "..." → Redeploy).
+
+## 9. Push these code changes and redeploy
+Since this added new files (`lib/email.ts`) and changed existing ones (the join action, the
+webhook, the event page), you need to get the updated code onto GitHub and redeployed:
+1. Open **GitHub Desktop**
+2. It should show the changed/new files under "Changes"
+3. Type a commit message like `add promptpay and email confirmations`
+4. Click **Commit to main**, then **Push origin**
+5. Vercel will automatically detect the push and redeploy — check the **Deployments** tab
+   for a new one in progress
+
+
 - Real database — nothing disappears when you refresh or leave the page
 - Real Stripe Checkout with a genuinely different price per event, read server-side
 - Real admin login (Supabase Auth + email allow-list) instead of a password sitting in
@@ -70,6 +108,5 @@ with git: create the repo on github.com, then in this folder run
 
 ## Reasonable next steps (not included yet)
 - Event capacity limits / sold-out handling
-- Email confirmations beyond Stripe's built-in receipt
 - Refunds/cancellations flow
 - Image uploads for events

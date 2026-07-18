@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { stripe } from "@/lib/stripe";
+import { sendTicketConfirmationEmail } from "@/lib/email";
 
 export async function joinEvent(formData: FormData) {
   const eventId = String(formData.get("eventId"));
@@ -31,6 +32,7 @@ export async function joinEvent(formData: FormData) {
 
   const priceBaht = Number(event.price_baht);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
+  const eventWhen = `${event.day} ${event.month}`;
 
   // Free event: confirm the spot immediately, no Stripe involved.
   if (priceBaht <= 0) {
@@ -40,15 +42,34 @@ export async function joinEvent(formData: FormData) {
       email,
       status: "free_confirmed",
     });
+
+    await sendTicketConfirmationEmail({
+      to: email,
+      name,
+      eventTitle: event.title,
+      eventWhen,
+      eventWhere: event.location,
+      paid: false,
+      priceLabel: "Free",
+    });
+
     redirect(`/success?event=${event.id}`);
   }
 
   // Paid event: create a real Stripe Checkout Session with THIS event's
-  // own price. Stripe hosts the actual card entry — card details never
-  // touch our server.
+  // own price. Stripe hosts the actual payment entry — card/QR details
+  // never touch our server.
+  //
+  // "card" and "promptpay" both work for THB. PromptPay renders as a
+  // real Thai QR code on Stripe's checkout page for the customer to
+  // scan and pay with their banking app.
+  //
+  // IMPORTANT: PromptPay must also be turned on in your Stripe Dashboard
+  // (Settings > Payment methods) or Stripe will silently fall back to
+  // card-only — see the README.
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
-    payment_method_types: ["card"],
+    payment_method_types: ["card", "promptpay"],
     customer_email: email,
     line_items: [
       {
@@ -65,8 +86,10 @@ export async function joinEvent(formData: FormData) {
     metadata: { event_id: event.id, name, email },
   });
 
-  // Record a pending ticket now; the webhook flips it to "paid" once
-  // Stripe confirms the charge actually went through.
+  // Record a pending ticket now; the webhook flips it to "paid" (and
+  // sends the confirmation email) once Stripe confirms the charge
+  // actually went through — this works the same for both card and
+  // PromptPay payments.
   await admin.from("tickets").insert({
     event_id: event.id,
     name,
