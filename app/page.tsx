@@ -1,5 +1,4 @@
 import { createClient } from "@/lib/supabase-server";
-import { CalendarDays } from "lucide-react";
 
 export const revalidate = 0; // always fetch fresh
 
@@ -61,20 +60,22 @@ export default async function HomePage({
 
         <div className="grid">
           {events?.map((ev) => (
-            <a key={ev.id} className="card" href={`/events/${ev.id}`}>
-              <div
-                className="card-image"
-                style={ev.image_url ? { backgroundImage: `url(${ev.image_url})` } : undefined}
-              >
-                <span className="cat-badge">{ev.category}</span>
+            <a key={ev.id} className="ticket" href={`/events/${ev.id}`}>
+              <div className="ticket-date">
+                <span className="day">{ev.day}</span>
+                <span className="month">{ev.month}</span>
               </div>
-              <div className="card-body">
+              <div className="ticket-body">
+                <span className={`ticket-cat ticket-cat-${ev.category}`}>{ev.category}</span>
                 <h3>{ev.title}</h3>
-                <p className="meta meta-row"><CalendarDays size={14} /> {ev.day} {ev.month} · {ev.location}</p>
+                <p className="meta">{ev.location}</p>
                 <p className="meta">{ev.details}</p>
-                <p className="price">
-                  {Number(ev.price_baht) === 0 ? "Free" : `฿${Number(ev.price_baht).toFixed(0)}`}
-                </p>
+                <div className="ticket-foot">
+                  <span className="ticket-price">
+                    {Number(ev.price_baht) === 0 ? "Free" : `฿${Number(ev.price_baht).toFixed(0)}`}
+                  </span>
+                  <span className="ticket-details">Details →</span>
+                </div>
               </div>
             </a>
           ))}

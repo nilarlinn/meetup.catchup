@@ -13,7 +13,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <header className="site">
           <div className="wrap">
-            <a className="brand" href="/">Meetup Catch Up</a>
+            <a className="brand-block" href="/">
+              <span className="brand">Meetup Catch Up</span>
+              <span className="brand-sub">Bangkok Sports &amp; Social</span>
+            </a>
             <nav>
               <a href="/" className="nav-link">
                 <CalendarDays size={16} />

@@ -35,6 +35,9 @@ header.site {
 }
 header.site .wrap { display: flex; justify-content: space-between; align-items: center; }
 header.site a.brand { font-family: 'Fraunces', serif; font-weight: 500; font-size: 21px; text-decoration: none; color: white; letter-spacing: -0.01em; }
+a.brand-block { text-decoration: none; display: flex; flex-direction: column; gap: 3px; }
+a.brand-block .brand { font-family: 'Fraunces', serif; font-weight: 500; font-size: 21px; color: white; letter-spacing: -0.01em; }
+a.brand-block .brand-sub { font-family: 'Work Sans', sans-serif; font-size: 10px; font-weight: 500; color: var(--gold); text-transform: uppercase; letter-spacing: 0.12em; }
 header.site nav a { color: rgba(255,255,255,0.6); text-decoration: none; margin-left: 28px; font-size: 13px; font-weight: 400; letter-spacing: 0.02em; transition: color 0.2s; }
 header.site nav a:hover { color: var(--gold-light); }
 header.site nav a.nav-link { display: inline-flex; align-items: center; gap: 7px; }
@@ -208,6 +211,63 @@ table.admin th { font-size: 11px; text-transform: uppercase; color: var(--ink-so
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .category-tile:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(23,22,26,0.15); }
+
+.ticket {
+  display: flex;
+  background: var(--card);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--ink);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.ticket:hover { box-shadow: 0 20px 40px rgba(23,22,26,0.10); transform: translateY(-2px); }
+.ticket-date {
+  background: var(--charcoal);
+  color: white;
+  width: 84px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 6px;
+}
+.ticket-date .day { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 600; line-height: 1; }
+.ticket-date .month { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--gold-light); margin-top: 8px; }
+.ticket-body { padding: 20px 24px; flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.ticket-cat {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 4px 11px;
+  border-radius: 100px;
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+.ticket-body h3 { margin: 0 0 7px; font-size: 18px; font-weight: 500; line-height: 1.3; }
+.ticket-body .meta { font-size: 13px; color: var(--ink-soft); margin: 2px 0; font-weight: 300; }
+.ticket-foot {
+  margin-top: auto;
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed var(--border);
+}
+.ticket-price { font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 14px; color: var(--charcoal); }
+.ticket-details { font-size: 13px; font-weight: 600; color: var(--gold); white-space: nowrap; }
+
+.ticket-cat-padel { background: #E7F0FA; color: #2E6FB0; }
+.ticket-cat-pickleball { background: #EAF3E6; color: #4C8C3B; }
+.ticket-cat-tennis { background: #FBF3DC; color: #A88423; }
+.ticket-cat-running { background: #FBEAE0; color: #C05A2E; }
+.ticket-cat-badminton { background: #EEF5E5; color: #5C8A32; }
+.ticket-cat-social { background: #F7E7ED; color: #B24C72; }
+.ticket-cat-party { background: #F2E4E4; color: #6E3B3B; }
 
 footer.site-footer {
   background: var(--charcoal);
