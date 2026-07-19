@@ -33,8 +33,9 @@ export default async function HomePage({
     <>
       <div className="hero">
         <div className="wrap">
-          <h1>Find what's on</h1>
-          <p>Padel, pickleball, tennis, running, badminton and social meetups across Bangkok.</p>
+          <span style={{ color: "var(--gold)", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 500 }}>Bangkok</span>
+          <h1 style={{ marginTop: 10 }}>Find what's on</h1>
+          <p>A curated list of padel, pickleball, tennis, running, badminton and social meetups.</p>
         </div>
       </div>
 
@@ -79,9 +80,9 @@ export default async function HomePage({
           ))}
         </div>
 
-        <div style={{ marginTop: 56 }}>
-          <span className="cat" style={{ display: "block", marginBottom: 6 }}>Browse</span>
-          <h2 style={{ marginBottom: 20 }}>Find your kind of night</h2>
+        <div style={{ marginTop: 72 }}>
+          <span className="cat" style={{ display: "block", marginBottom: 8 }}>Browse</span>
+          <h2 style={{ marginBottom: 28 }}>Find your kind of night</h2>
           <div className="category-grid">
             {CATEGORIES.map((c) => (
               <a
