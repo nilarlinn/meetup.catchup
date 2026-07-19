@@ -1,5 +1,5 @@
 import { submitEvent } from "./actions";
-import { Send, MessageCircle } from "lucide-react";
+import { Send, Instagram } from "lucide-react";
 import { CONTACT } from "@/lib/contact";
 
 export default function SubmitPage() {
@@ -12,8 +12,8 @@ export default function SubmitPage() {
 
       <div className="note" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
         <span>Prefer to just message us directly?</span>
-        <a href={CONTACT.line} target="_blank" rel="noopener noreferrer" className="btn" style={{ padding: "8px 16px", fontSize: 13 }}>
-          <MessageCircle size={14} /> Contact us on Line
+        <a href={CONTACT.instagram} target="_blank" rel="noopener noreferrer" className="btn" style={{ padding: "8px 16px", fontSize: 13 }}>
+          <Instagram size={14} /> Message us on Instagram
         </a>
       </div>
 

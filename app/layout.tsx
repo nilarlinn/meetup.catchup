@@ -1,5 +1,5 @@
 import "./globals.css";
-import { CalendarDays, PlusCircle, Info, Instagram, Facebook, MessageCircle } from "lucide-react";
+import { CalendarDays, PlusCircle, Info, Instagram, Mail } from "lucide-react";
 import { CONTACT } from "@/lib/contact";
 
 export const metadata = {
@@ -52,11 +52,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href={CONTACT.instagram} target="_blank" rel="noopener noreferrer" className="nav-link">
                 <Instagram size={16} /> Instagram
               </a>
-              <a href={CONTACT.facebook} target="_blank" rel="noopener noreferrer" className="nav-link">
-                <Facebook size={16} /> Facebook
-              </a>
-              <a href={CONTACT.line} target="_blank" rel="noopener noreferrer" className="nav-link">
-                <MessageCircle size={16} /> Line
+              <a href={`mailto:${CONTACT.email}`} className="nav-link">
+                <Mail size={16} /> Email
               </a>
             </div>
           </div>

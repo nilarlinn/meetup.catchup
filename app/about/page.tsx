@@ -1,4 +1,4 @@
-import { Instagram, Facebook, MessageCircle, Mail } from "lucide-react";
+import { Instagram, Mail } from "lucide-react";
 import { CONTACT } from "@/lib/contact";
 
 export default function AboutPage() {
@@ -21,17 +21,11 @@ export default function AboutPage() {
           Reach out to us directly and we'll help get it listed.
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <a href={`mailto:${CONTACT.email}`} className="btn ghost" style={{ justifyContent: "flex-start" }}>
-            <Mail size={16} /> {CONTACT.email}
-          </a>
           <a href={CONTACT.instagram} target="_blank" rel="noopener noreferrer" className="btn ghost" style={{ justifyContent: "flex-start" }}>
             <Instagram size={16} /> Instagram
           </a>
-          <a href={CONTACT.facebook} target="_blank" rel="noopener noreferrer" className="btn ghost" style={{ justifyContent: "flex-start" }}>
-            <Facebook size={16} /> Facebook
-          </a>
-          <a href={CONTACT.line} target="_blank" rel="noopener noreferrer" className="btn ghost" style={{ justifyContent: "flex-start" }}>
-            <MessageCircle size={16} /> Line
+          <a href={`mailto:${CONTACT.email}`} className="btn ghost" style={{ justifyContent: "flex-start" }}>
+            <Mail size={16} /> {CONTACT.email}
           </a>
         </div>
       </div>
