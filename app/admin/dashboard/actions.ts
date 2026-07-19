@@ -4,9 +4,13 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { createClient } from "@/lib/supabase-server";
+import { uploadEventPhoto } from "@/lib/upload";
 
 export async function createEvent(formData: FormData) {
   const admin = createAdminClient();
+  const photo = formData.get("photo") as File | null;
+  const imageUrl = await uploadEventPhoto(admin, photo);
+
   await admin.from("events").insert({
     title: String(formData.get("title") || "").trim(),
     category: String(formData.get("category") || "social"),
@@ -16,7 +20,7 @@ export async function createEvent(formData: FormData) {
     location: String(formData.get("location") || "").trim(),
     details: String(formData.get("details") || "").trim(),
     description: String(formData.get("description") || "").trim(),
-    image_url: String(formData.get("image_url") || "").trim(),
+    image_url: imageUrl,
   });
   revalidatePath("/admin/dashboard");
   revalidatePath("/");
@@ -25,6 +29,13 @@ export async function createEvent(formData: FormData) {
 export async function updateEvent(formData: FormData) {
   const id = String(formData.get("id"));
   const admin = createAdminClient();
+
+  // Keep the existing photo unless a new one was uploaded.
+  const existingImageUrl = String(formData.get("existing_image_url") || "");
+  const photo = formData.get("photo") as File | null;
+  const newImageUrl = await uploadEventPhoto(admin, photo);
+  const imageUrl = newImageUrl || existingImageUrl;
+
   await admin
     .from("events")
     .update({
@@ -36,7 +47,7 @@ export async function updateEvent(formData: FormData) {
       location: String(formData.get("location") || "").trim(),
       details: String(formData.get("details") || "").trim(),
       description: String(formData.get("description") || "").trim(),
-      image_url: String(formData.get("image_url") || "").trim(),
+      image_url: imageUrl,
     })
     .eq("id", id);
   revalidatePath("/admin/dashboard");

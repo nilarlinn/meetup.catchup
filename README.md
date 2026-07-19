@@ -106,6 +106,18 @@ webhook, the event page), you need to get the updated code onto GitHub and redep
 - All writes (events, approvals, payments) happen server-side — nothing sensitive is
   exposed to visitors' browsers
 
+## 10. Set up photo uploads (Supabase Storage)
+Event photos now upload directly from your device instead of needing a URL. This needs one
+storage bucket created once in Supabase.
+1. Go to your Supabase project → **Storage** in the left sidebar
+2. Click **"New bucket"**
+3. Name it exactly: `event-photos`
+4. Toggle **"Public bucket"** to **ON** (this lets the photos actually display on your site —
+   without this, uploaded photos won't be visible to visitors)
+5. Click **Create bucket**
+That's it — no further configuration needed, since all uploads happen through your server
+using the service role key, which already has full access.
+
 ## Reasonable next steps (not included yet)
 - Event capacity limits / sold-out handling
 - Refunds/cancellations flow

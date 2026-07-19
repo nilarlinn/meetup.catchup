@@ -58,7 +58,7 @@ export default async function AdminDashboard() {
       ))}
 
       <h2 style={{ marginTop: 40 }}>Add a new event</h2>
-      <form action={createEvent} style={{ maxWidth: 480 }}>
+      <form action={createEvent} style={{ maxWidth: 480 }} encType="multipart/form-data">
         <div className="form-row"><label>Title</label><input name="title" required /></div>
         <div className="form-row">
           <label>Category</label>
@@ -78,8 +78,9 @@ export default async function AdminDashboard() {
         <div className="form-row"><label>Location / time</label><input name="location" /></div>
         <div className="form-row"><label>Extra details</label><input name="details" /></div>
         <div className="form-row">
-          <label>Photo URL</label>
-          <input name="image_url" placeholder="https://..." />
+          <label>Event photo</label>
+          <input name="photo" type="file" accept="image/*" />
+          <p className="hint">Upload a photo from your device — optional.</p>
           <p className="hint">Paste a link to an image (from Unsplash, your own hosting, etc.) — optional.</p>
         </div>
         <div className="form-row"><label>Description</label><textarea name="description" /></div>
@@ -97,7 +98,7 @@ export default async function AdminDashboard() {
               <td>
                 <details>
                   <summary style={{ cursor: "pointer" }}>{ev.title}</summary>
-                  <form action={updateEvent} style={{ maxWidth: 420, marginTop: 10 }}>
+                  <form action={updateEvent} style={{ maxWidth: 420, marginTop: 10 }} encType="multipart/form-data">
                     <input type="hidden" name="id" value={ev.id} />
                     <div className="form-row"><label>Title</label><input name="title" defaultValue={ev.title} required /></div>
                     <div className="form-row">
@@ -117,7 +118,19 @@ export default async function AdminDashboard() {
                     <div className="form-row"><label>Month</label><input name="month" defaultValue={ev.month} /></div>
                     <div className="form-row"><label>Location / time</label><input name="location" defaultValue={ev.location} /></div>
                     <div className="form-row"><label>Extra details</label><input name="details" defaultValue={ev.details} /></div>
-                    <div className="form-row"><label>Photo URL</label><input name="image_url" defaultValue={ev.image_url} placeholder="https://..." /></div>
+                    <div className="form-row">
+                      <label>Event photo</label>
+                      {ev.image_url && (
+                        <img
+                          src={ev.image_url}
+                          alt=""
+                          style={{ width: 120, height: 80, objectFit: "cover", borderRadius: 8, marginBottom: 8, display: "block" }}
+                        />
+                      )}
+                      <input type="hidden" name="existing_image_url" value={ev.image_url || ""} />
+                      <input name="photo" type="file" accept="image/*" />
+                      <p className="hint">Current photo shown above. Upload a new one to replace it, or leave blank to keep it.</p>
+                    </div>
                     <div className="form-row"><label>Description</label><textarea name="description" defaultValue={ev.description} /></div>
                     <button className="btn" type="submit">Save changes</button>
                   </form>

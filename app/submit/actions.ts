@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase-admin";
+import { uploadEventPhoto } from "@/lib/upload";
 
 export async function submitEvent(formData: FormData) {
   const title = String(formData.get("title") || "").trim();
@@ -12,6 +13,9 @@ export async function submitEvent(formData: FormData) {
   }
 
   const admin = createAdminClient();
+  const photo = formData.get("photo") as File | null;
+  const imageUrl = await uploadEventPhoto(admin, photo);
+
   await admin.from("submissions").insert({
     submitter_name: String(formData.get("name") || "").trim(),
     contact,
@@ -23,7 +27,7 @@ export async function submitEvent(formData: FormData) {
     location: String(formData.get("location") || "").trim(),
     details: String(formData.get("details") || "").trim(),
     description: String(formData.get("description") || "").trim(),
-    image_url: String(formData.get("image_url") || "").trim(),
+    image_url: imageUrl,
     status: "pending",
   });
 

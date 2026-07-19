@@ -1,0 +1,28 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+// Uploads a photo to the "event-photos" Supabase Storage bucket and
+// returns its public URL. Returns an empty string if no valid file was
+// given, so callers can safely fall back to "no photo".
+export async function uploadEventPhoto(
+  admin: SupabaseClient,
+  file: File | null
+): Promise<string> {
+  if (!file || file.size === 0) return "";
+
+  const ext = file.name.split(".").pop() || "jpg";
+  const path = `events/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+  const arrayBuffer = await file.arrayBuffer();
+  const { error } = await admin.storage.from("event-photos").upload(path, arrayBuffer, {
+    contentType: file.type || "image/jpeg",
+    upsert: false,
+  });
+
+  if (error) {
+    console.error("Photo upload failed:", error);
+    return "";
+  }
+
+  const { data } = admin.storage.from("event-photos").getPublicUrl(path);
+  return data.publicUrl;
+}

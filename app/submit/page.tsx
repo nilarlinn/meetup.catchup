@@ -8,7 +8,7 @@ export default function SubmitPage() {
         Send us the details — we review every submission before it goes live.
       </p>
 
-      <form action={submitEvent} style={{ marginTop: 20 }}>
+      <form action={submitEvent} style={{ marginTop: 20 }} encType="multipart/form-data">
         <div className="form-row">
           <label>Your name</label>
           <input name="name" placeholder="Jane Doe" />
@@ -54,8 +54,8 @@ export default function SubmitPage() {
           <input name="details" placeholder="Format, skill level, what to bring..." />
         </div>
         <div className="form-row">
-          <label>Photo URL (optional)</label>
-          <input name="image_url" placeholder="https://..." />
+          <label>Event photo (optional)</label>
+          <input name="photo" type="file" accept="image/*" />
         </div>
         <div className="form-row">
           <label>Description</label>
