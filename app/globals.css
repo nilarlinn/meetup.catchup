@@ -36,6 +36,7 @@ header.site .wrap { display: flex; justify-content: space-between; align-items: 
 header.site a.brand { font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px; text-decoration: none; color: white; letter-spacing: -0.01em; }
 header.site nav a { color: rgba(255,255,255,0.85); text-decoration: none; margin-left: 22px; font-size: 14px; font-weight: 500; transition: color 0.15s; }
 header.site nav a:hover { color: white; }
+header.site nav a.nav-link { display: inline-flex; align-items: center; gap: 6px; }
 
 .hero {
   background: linear-gradient(160deg, var(--indigo) 0%, var(--indigo-soft) 100%);
@@ -91,7 +92,9 @@ header.site nav a:hover { color: white; }
 .card .price { margin-top: auto; padding-top: 12px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; font-size: 15px; }
 
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: var(--marigold);
   color: var(--indigo);
   border: 0;
@@ -106,6 +109,8 @@ header.site nav a:hover { color: white; }
 .btn:hover { box-shadow: 0 6px 16px rgba(245,166,35,0.35); }
 .btn.ghost { background: transparent; border: 1px solid var(--ink-soft); color: var(--ink); }
 .btn.pink { background: var(--pink); color: white; }
+
+.meta-row { display: flex; align-items: center; gap: 6px; }
 
 .event-hero {
   width: 100%;
@@ -184,3 +189,36 @@ table.admin th { font-size: 12px; text-transform: uppercase; color: var(--ink-so
   transition: transform 0.15s ease;
 }
 .category-tile:hover { transform: translateY(-3px); }
+
+footer.site-footer {
+  background: var(--indigo);
+  color: rgba(255,255,255,0.7);
+  margin-top: 60px;
+  padding: 48px 0 24px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 32px;
+}
+.footer-tagline { font-size: 14px; margin-top: 10px; max-width: 320px; }
+footer.site-footer h4 {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.45);
+  margin: 0 0 14px;
+}
+footer.site-footer a { display: block; color: rgba(255,255,255,0.8); text-decoration: none; font-size: 14px; margin-bottom: 10px; }
+footer.site-footer a:hover { color: white; }
+footer.site-footer a.nav-link { display: inline-flex; }
+.footer-bottom {
+  margin-top: 36px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 13px;
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}

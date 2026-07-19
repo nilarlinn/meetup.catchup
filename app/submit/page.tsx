@@ -1,4 +1,6 @@
 import { submitEvent } from "./actions";
+import { Send, MessageCircle } from "lucide-react";
+import { CONTACT } from "@/lib/contact";
 
 export default function SubmitPage() {
   return (
@@ -7,6 +9,13 @@ export default function SubmitPage() {
       <p style={{ color: "var(--ink-soft)" }}>
         Send us the details — we review every submission before it goes live.
       </p>
+
+      <div className="note" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+        <span>Prefer to just message us directly?</span>
+        <a href={CONTACT.line} target="_blank" rel="noopener noreferrer" className="btn" style={{ padding: "8px 16px", fontSize: 13 }}>
+          <MessageCircle size={14} /> Contact us on Line
+        </a>
+      </div>
 
       <form action={submitEvent} style={{ marginTop: 20 }} encType="multipart/form-data">
         <div className="form-row">
@@ -61,7 +70,7 @@ export default function SubmitPage() {
           <label>Description</label>
           <textarea name="description" placeholder="Tell people what to expect..." />
         </div>
-        <button className="btn" type="submit">Submit for review</button>
+        <button className="btn" type="submit"><Send size={15} /> Submit for review</button>
       </form>
     </main>
   );

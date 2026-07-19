@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase-server";
+import { CalendarDays } from "lucide-react";
 
 export const revalidate = 0; // always fetch fresh
 
@@ -68,7 +69,7 @@ export default async function HomePage({
               </div>
               <div className="card-body">
                 <h3>{ev.title}</h3>
-                <p className="meta">{ev.day} {ev.month} · {ev.location}</p>
+                <p className="meta meta-row"><CalendarDays size={14} /> {ev.day} {ev.month} · {ev.location}</p>
                 <p className="meta">{ev.details}</p>
                 <p className="price">
                   {Number(ev.price_baht) === 0 ? "Free" : `฿${Number(ev.price_baht).toFixed(0)}`}

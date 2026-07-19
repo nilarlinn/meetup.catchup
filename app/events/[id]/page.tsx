@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase-server";
 import { joinEvent } from "./actions";
+import { CalendarDays, Ticket, CreditCard } from "lucide-react";
 
 export const revalidate = 0;
 
@@ -25,7 +26,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
 
       <span className="cat" style={{ display: "block", marginBottom: 6 }}>{event.category}</span>
       <h1>{event.title}</h1>
-      <p className="meta">{event.day} {event.month} · {event.location}</p>
+      <p className="meta meta-row"><CalendarDays size={15} /> {event.day} {event.month} · {event.location}</p>
       {event.details && <p className="meta">{event.details}</p>}
       {event.description && (
         <p style={{ marginTop: 16, fontSize: 15, lineHeight: 1.7 }}>{event.description}</p>
@@ -45,6 +46,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
           <input name="email" type="email" required placeholder="you@email.com" />
         </div>
         <button className="btn" type="submit">
+          {isFree ? <Ticket size={16} /> : <CreditCard size={16} />}
           {isFree ? "Confirm my spot — free" : `Pay ฿${Number(event.price_baht).toFixed(0)} & join`}
         </button>
         {!isFree && (

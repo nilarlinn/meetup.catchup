@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-browser";
+import { LogIn } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -58,6 +59,7 @@ export default function AdminLoginPage() {
         </div>
         {error && <p style={{ color: "var(--pink)", fontSize: 13 }}>{error}</p>}
         <button className="btn" type="submit" disabled={loading}>
+          <LogIn size={16} />
           {loading ? "Signing in..." : "Sign in"}
         </button>
       </form>

@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase-admin";
+import { LogOut, Check, X, PlusCircle, Save, Trash2 } from "lucide-react";
 import {
   createEvent,
   updateEvent,
@@ -32,7 +33,7 @@ export default async function AdminDashboard() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1>Admin dashboard</h1>
         <form action={signOutAdmin}>
-          <button className="btn ghost" type="submit">Sign out</button>
+          <button className="btn ghost" type="submit"><LogOut size={15} /> Sign out</button>
         </form>
       </div>
 
@@ -48,10 +49,10 @@ export default async function AdminDashboard() {
           <p className="meta">From {s.submitter_name || "unknown"} — {s.contact}</p>
           <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
             <form action={approveSubmission.bind(null, s.id)}>
-              <button className="btn" type="submit">Approve</button>
+              <button className="btn" type="submit"><Check size={15} /> Approve</button>
             </form>
             <form action={dismissSubmission.bind(null, s.id)}>
-              <button className="btn ghost" type="submit">Dismiss</button>
+              <button className="btn ghost" type="submit"><X size={15} /> Dismiss</button>
             </form>
           </div>
         </div>
@@ -84,7 +85,7 @@ export default async function AdminDashboard() {
           <p className="hint">Paste a link to an image (from Unsplash, your own hosting, etc.) — optional.</p>
         </div>
         <div className="form-row"><label>Description</label><textarea name="description" /></div>
-        <button className="btn" type="submit">Add event</button>
+        <button className="btn" type="submit"><PlusCircle size={15} /> Add event</button>
       </form>
 
       <h2 style={{ marginTop: 40 }}>All events</h2>
@@ -132,7 +133,7 @@ export default async function AdminDashboard() {
                       <p className="hint">Current photo shown above. Upload a new one to replace it, or leave blank to keep it.</p>
                     </div>
                     <div className="form-row"><label>Description</label><textarea name="description" defaultValue={ev.description} /></div>
-                    <button className="btn" type="submit">Save changes</button>
+                    <button className="btn" type="submit"><Save size={15} /> Save changes</button>
                   </form>
                 </details>
               </td>
@@ -141,7 +142,7 @@ export default async function AdminDashboard() {
               <td>{Number(ev.price_baht) === 0 ? "Free" : `฿${Number(ev.price_baht).toFixed(0)}`}</td>
               <td>
                 <form action={deleteEvent.bind(null, ev.id)}>
-                  <button className="btn ghost" type="submit">Delete</button>
+                  <button className="btn ghost" type="submit"><Trash2 size={15} /> Delete</button>
                 </form>
               </td>
             </tr>
