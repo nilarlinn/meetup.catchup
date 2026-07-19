@@ -23,6 +23,7 @@ export async function submitEvent(formData: FormData) {
     location: String(formData.get("location") || "").trim(),
     details: String(formData.get("details") || "").trim(),
     description: String(formData.get("description") || "").trim(),
+    image_url: String(formData.get("image_url") || "").trim(),
     status: "pending",
   });
 

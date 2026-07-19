@@ -30,6 +30,7 @@ export default function SubmitPage() {
             <option value="tennis">Tennis</option>
             <option value="running">Running</option>
             <option value="party">Party</option>
+            <option value="badminton">Badminton</option>
           </select>
         </div>
         <div className="form-row">
@@ -51,6 +52,10 @@ export default function SubmitPage() {
         <div className="form-row">
           <label>Extra details</label>
           <input name="details" placeholder="Format, skill level, what to bring..." />
+        </div>
+        <div className="form-row">
+          <label>Photo URL (optional)</label>
+          <input name="image_url" placeholder="https://..." />
         </div>
         <div className="form-row">
           <label>Description</label>

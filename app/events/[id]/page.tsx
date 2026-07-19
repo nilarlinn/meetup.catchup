@@ -17,7 +17,12 @@ export default async function EventPage({ params }: { params: { id: string } }) 
   const isFree = Number(event.price_baht) === 0;
 
   return (
-    <main className="wrap section" style={{ maxWidth: 640 }}>
+    <main className="wrap section" style={{ maxWidth: 680 }}>
+      <div
+        className="event-hero"
+        style={event.image_url ? { backgroundImage: `url(${event.image_url})` } : undefined}
+      />
+
       <span className="cat" style={{ display: "block", marginBottom: 6 }}>{event.category}</span>
       <h1>{event.title}</h1>
       <p className="meta">{event.day} {event.month} · {event.location}</p>
@@ -25,11 +30,11 @@ export default async function EventPage({ params }: { params: { id: string } }) 
       {event.description && (
         <p style={{ marginTop: 16, fontSize: 15, lineHeight: 1.7 }}>{event.description}</p>
       )}
-      <p className="price" style={{ fontSize: 20, margin: "18px 0" }}>
+      <p className="price" style={{ fontSize: 22, margin: "20px 0" }}>
         {isFree ? "Free" : `฿${Number(event.price_baht).toFixed(0)}`}
       </p>
 
-      <form action={joinEvent} style={{ marginTop: 24, borderTop: "1px dashed rgba(36,28,16,0.2)", paddingTop: 20 }}>
+      <form action={joinEvent} style={{ marginTop: 8, borderTop: "1px solid var(--border)", paddingTop: 24 }}>
         <input type="hidden" name="eventId" value={event.id} />
         <div className="form-row">
           <label>Your name</label>
@@ -43,7 +48,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
           {isFree ? "Confirm my spot — free" : `Pay ฿${Number(event.price_baht).toFixed(0)} & join`}
         </button>
         {!isFree && (
-          <p style={{ fontSize: 12, color: "var(--ink-soft)", marginTop: 8 }}>
+          <p style={{ fontSize: 12, color: "var(--ink-soft)", marginTop: 10 }}>
             You'll be taken to Stripe's secure checkout to pay by card or scan a Thai QR
             (PromptPay) with your banking app.
           </p>

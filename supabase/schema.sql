@@ -11,6 +11,7 @@ create table if not exists events (
   location text not null default '',
   details text not null default '',
   description text not null default '',
+  image_url text not null default '',
   price_baht numeric(10,2) not null default 0,
   created_at timestamptz not null default now()
 );
@@ -37,6 +38,7 @@ create table if not exists submissions (
   location text not null default '',
   details text not null default '',
   description text not null default '',
+  image_url text not null default '',
   status text not null default 'pending', -- pending | approved | dismissed
   created_at timestamptz not null default now()
 );

@@ -16,6 +16,7 @@ export async function createEvent(formData: FormData) {
     location: String(formData.get("location") || "").trim(),
     details: String(formData.get("details") || "").trim(),
     description: String(formData.get("description") || "").trim(),
+    image_url: String(formData.get("image_url") || "").trim(),
   });
   revalidatePath("/admin/dashboard");
   revalidatePath("/");
@@ -35,6 +36,7 @@ export async function updateEvent(formData: FormData) {
       location: String(formData.get("location") || "").trim(),
       details: String(formData.get("details") || "").trim(),
       description: String(formData.get("description") || "").trim(),
+      image_url: String(formData.get("image_url") || "").trim(),
     })
     .eq("id", id);
   revalidatePath("/admin/dashboard");
@@ -62,6 +64,7 @@ export async function approveSubmission(id: string) {
     location: sub.location,
     details: sub.details,
     description: sub.description,
+    image_url: sub.image_url,
   });
   await admin.from("submissions").update({ status: "approved" }).eq("id", id);
   revalidatePath("/admin/dashboard");

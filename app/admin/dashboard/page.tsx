@@ -69,6 +69,7 @@ export default async function AdminDashboard() {
             <option value="tennis">Tennis</option>
             <option value="running">Running</option>
             <option value="party">Party</option>
+            <option value="badminton">Badminton</option>
           </select>
         </div>
         <div className="form-row"><label>Price in THB (0 for free)</label><input name="price" type="number" step="0.01" min="0" defaultValue="0" /></div>
@@ -76,6 +77,11 @@ export default async function AdminDashboard() {
         <div className="form-row"><label>Month</label><input name="month" placeholder="Jul" /></div>
         <div className="form-row"><label>Location / time</label><input name="location" /></div>
         <div className="form-row"><label>Extra details</label><input name="details" /></div>
+        <div className="form-row">
+          <label>Photo URL</label>
+          <input name="image_url" placeholder="https://..." />
+          <p className="hint">Paste a link to an image (from Unsplash, your own hosting, etc.) — optional.</p>
+        </div>
         <div className="form-row"><label>Description</label><textarea name="description" /></div>
         <button className="btn" type="submit">Add event</button>
       </form>
@@ -103,6 +109,7 @@ export default async function AdminDashboard() {
                         <option value="tennis">Tennis</option>
                         <option value="running">Running</option>
                         <option value="party">Party</option>
+            <option value="badminton">Badminton</option>
                       </select>
                     </div>
                     <div className="form-row"><label>Price in THB</label><input name="price" type="number" step="0.01" min="0" defaultValue={ev.price_baht} /></div>
@@ -110,6 +117,7 @@ export default async function AdminDashboard() {
                     <div className="form-row"><label>Month</label><input name="month" defaultValue={ev.month} /></div>
                     <div className="form-row"><label>Location / time</label><input name="location" defaultValue={ev.location} /></div>
                     <div className="form-row"><label>Extra details</label><input name="details" defaultValue={ev.details} /></div>
+                    <div className="form-row"><label>Photo URL</label><input name="image_url" defaultValue={ev.image_url} placeholder="https://..." /></div>
                     <div className="form-row"><label>Description</label><textarea name="description" defaultValue={ev.description} /></div>
                     <button className="btn" type="submit">Save changes</button>
                   </form>
