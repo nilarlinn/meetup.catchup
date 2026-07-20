@@ -316,6 +316,22 @@ footer.site-footer a.nav-link { display: inline-flex; }
   letter-spacing: 0.02em;
 }
 @media (max-width: 640px) {
-  .footer-grid { grid-template-columns: 1fr; }
-  .hero h1 { font-size: 34px; }
+  header.site .wrap { flex-direction: column; gap: 16px; text-align: center; }
+  header.site nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 16px; }
+  header.site nav a { margin-left: 0; }
+  .wrap { padding: 0 20px; }
+  .footer-grid { grid-template-columns: 1fr; text-align: center; }
+  .footer-grid > div { display: flex; flex-direction: column; align-items: center; }
+  .hero { text-align: center; padding: 56px 0 64px; }
+  .hero h1 { font-size: 30px; }
+  .hero p { margin-left: auto; margin-right: auto; }
+  .hero-search { margin: 0 auto; }
+  a.brand-block { justify-content: center; }
+  .section > *:not(.grid):not(.category-grid):not(.filter-row) { text-align: center; }
+  .filter-row { justify-content: center; }
+  .category-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .footer-bottom { text-align: center; }
+}
+@media (max-width: 420px) {
+  .category-grid { grid-template-columns: repeat(2, 1fr); }
 }
