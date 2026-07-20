@@ -35,9 +35,10 @@ header.site {
 }
 header.site .wrap { display: flex; justify-content: space-between; align-items: center; }
 header.site a.brand { font-family: 'Fraunces', serif; font-weight: 500; font-size: 21px; text-decoration: none; color: white; letter-spacing: -0.01em; }
-a.brand-block { text-decoration: none; display: flex; flex-direction: column; gap: 3px; }
-a.brand-block .brand { font-family: 'Fraunces', serif; font-weight: 500; font-size: 21px; color: white; letter-spacing: -0.01em; }
-a.brand-block .brand-sub { font-family: 'Work Sans', sans-serif; font-size: 10px; font-weight: 500; color: var(--gold); text-transform: uppercase; letter-spacing: 0.12em; }
+a.brand-block { text-decoration: none; display: flex; flex-direction: row; align-items: center; gap: 12px; }
+a.brand-block .brand-logo { height: 40px; width: auto; display: block; }
+a.brand-block span.brand { display: block; font-family: 'Fraunces', serif; font-weight: 500; font-size: 21px; color: white; letter-spacing: -0.01em; }
+a.brand-block span.brand-sub { display: block; font-family: 'Work Sans', sans-serif; font-size: 10px; font-weight: 500; color: var(--gold); text-transform: uppercase; letter-spacing: 0.12em; }
 header.site nav a { color: rgba(255,255,255,0.6); text-decoration: none; margin-left: 28px; font-size: 13px; font-weight: 400; letter-spacing: 0.02em; transition: color 0.2s; }
 header.site nav a:hover { color: var(--gold-light); }
 header.site nav a.nav-link { display: inline-flex; align-items: center; gap: 7px; }
@@ -57,6 +58,19 @@ header.site nav a.nav-link { display: inline-flex; align-items: center; gap: 7px
 }
 .hero h1 { font-size: 46px; margin: 0 0 16px; color: white; font-weight: 500; }
 .hero p { font-size: 16px; color: rgba(255,255,255,0.55); max-width: 460px; margin: 0; font-weight: 300; }
+.hero-search { display: flex; gap: 10px; max-width: 480px; }
+.hero-search input {
+  flex: 1;
+  padding: 13px 18px;
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 14px;
+  font-family: inherit;
+}
+.hero-search input::placeholder { color: rgba(255,255,255,0.4); }
+.hero-search input:focus { outline: none; border-color: var(--gold); }
 
 .section { padding: 56px 0; }
 

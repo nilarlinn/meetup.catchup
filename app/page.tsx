@@ -15,7 +15,7 @@ const CATEGORIES = [
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: { category?: string };
+  searchParams: { category?: string; q?: string };
 }) {
   const supabase = createClient();
   const { data: allEvents } = await supabase
@@ -24,17 +24,29 @@ export default async function HomePage({
     .order("created_at", { ascending: false });
 
   const activeCategory = searchParams.category;
-  const events = activeCategory
+  const query = (searchParams.q || "").toLowerCase().trim();
+
+  let events = activeCategory
     ? allEvents?.filter((ev) => ev.category === activeCategory)
     : allEvents;
+
+  if (query) {
+    events = events?.filter((ev) =>
+      `${ev.title} ${ev.location} ${ev.details}`.toLowerCase().includes(query)
+    );
+  }
 
   return (
     <>
       <div className="hero">
         <div className="wrap">
           <span style={{ color: "var(--gold)", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 500 }}>Bangkok</span>
-          <h1 style={{ marginTop: 10 }}>Find what's on</h1>
-          <p>A curated list of padel, pickleball, tennis, running, badminton and social meetups.</p>
+          <h1 style={{ marginTop: 10 }}>Find what's on tonight.</h1>
+          <p style={{ marginBottom: 28 }}>A curated list of padel, pickleball, tennis, running, badminton and social meetups.</p>
+          <form action="/" method="GET" className="hero-search">
+            <input type="text" name="q" placeholder="Search events" defaultValue={query} />
+            <button type="submit" className="btn">Search</button>
+          </form>
         </div>
       </div>
 
