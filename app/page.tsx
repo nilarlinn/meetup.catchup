@@ -39,17 +39,19 @@ export default async function HomePage({
   return (
     <>
       <div className="hero">
-        <div className="wrap">
+        <div className="wrap hero-flex">
+          <div className="hero-text">
+            <span style={{ color: "var(--gold)", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 500 }}>Bangkok</span>
+            <h1 style={{ marginTop: 10 }}>Find what's on tonight.</h1>
+            <p style={{ marginBottom: 28 }}>A curated list of padel, pickleball, tennis, running, badminton and social meetups.</p>
+            <form action="/" method="GET" className="hero-search">
+              <input type="text" name="q" placeholder="Search events" defaultValue={query} />
+              <button type="submit" className="btn">Search</button>
+            </form>
+          </div>
           <div className="hero-logo-card">
             <img src="/logo.png" alt="Meetup Catch Up" className="hero-logo" />
           </div>
-          <span style={{ color: "var(--gold)", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 500 }}>Bangkok</span>
-          <h1 style={{ marginTop: 10 }}>Find what's on tonight.</h1>
-          <p style={{ marginBottom: 28 }}>A curated list of padel, pickleball, tennis, running, badminton and social meetups.</p>
-          <form action="/" method="GET" className="hero-search">
-            <input type="text" name="q" placeholder="Search events" defaultValue={query} />
-            <button type="submit" className="btn">Search</button>
-          </form>
         </div>
       </div>
 
