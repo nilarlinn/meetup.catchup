@@ -9,6 +9,7 @@ const CATEGORIES = [
   { key: "running", label: "Running", keys: ["running"] },
   { key: "badminton", label: "Badminton", keys: ["badminton"] },
   { key: "social_party", label: "Social Party", keys: ["social", "party", "social_party"] },
+  { key: "coffee_gathering", label: "Coffee Gathering", keys: ["coffee_gathering"] },
 ];
 
 export default async function HomePage({
