@@ -298,6 +298,7 @@ table.admin th { font-size: 11px; text-transform: uppercase; color: var(--ink-so
 .ticket-cat-badminton { background: #EEF5E5; color: #5C8A32; }
 .ticket-cat-social { background: #F7E7ED; color: #B24C72; }
 .ticket-cat-party { background: #F2E4E4; color: #6E3B3B; }
+.ticket-cat-social_party { background: #F7E7ED; color: #B24C72; }
 
 footer.site-footer {
   background: var(--charcoal);

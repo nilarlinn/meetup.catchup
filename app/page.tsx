@@ -3,13 +3,12 @@ import { createClient } from "@/lib/supabase-server";
 export const revalidate = 0; // always fetch fresh
 
 const CATEGORIES = [
-  { key: "padel", label: "Padel" },
-  { key: "pickleball", label: "Pickleball" },
-  { key: "tennis", label: "Tennis" },
-  { key: "running", label: "Running" },
-  { key: "badminton", label: "Badminton" },
-  { key: "social", label: "Social" },
-  { key: "party", label: "Party" },
+  { key: "padel", label: "Padel", keys: ["padel"] },
+  { key: "pickleball", label: "Pickleball", keys: ["pickleball"] },
+  { key: "tennis", label: "Tennis", keys: ["tennis"] },
+  { key: "running", label: "Running", keys: ["running"] },
+  { key: "badminton", label: "Badminton", keys: ["badminton"] },
+  { key: "social_party", label: "Social Party", keys: ["social", "party", "social_party"] },
 ];
 
 export default async function HomePage({
@@ -24,10 +23,11 @@ export default async function HomePage({
     .order("created_at", { ascending: false });
 
   const activeCategory = searchParams.category;
+  const activeGroup = CATEGORIES.find((c) => c.key === activeCategory);
   const query = (searchParams.q || "").toLowerCase().trim();
 
-  let events = activeCategory
-    ? allEvents?.filter((ev) => ev.category === activeCategory)
+  let events = activeGroup
+    ? allEvents?.filter((ev) => activeGroup.keys.includes(ev.category))
     : allEvents;
 
   if (query) {
