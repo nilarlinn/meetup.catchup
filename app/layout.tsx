@@ -45,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <p className="footer-tagline">
                 Padel, pickleball, tennis, running and social meetups — all in one place.
               </p>
+              <img src="/logo-icon.png" alt="Meetup Catch Up" className="footer-logo" />
             </div>
             <div>
               <h4>Explore</h4>

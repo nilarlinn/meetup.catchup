@@ -307,6 +307,7 @@ footer.site-footer {
   gap: 40px;
 }
 .footer-tagline { font-size: 14px; margin-top: 12px; max-width: 320px; font-weight: 300; }
+.footer-logo { height: 64px; width: auto; display: block; margin-top: 18px; border-radius: 8px; background: white; padding: 8px; }
 footer.site-footer h4 {
   font-family: 'Work Sans', sans-serif;
   font-size: 11px;
