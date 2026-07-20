@@ -40,6 +40,7 @@ export default async function HomePage({
     <>
       <div className="hero">
         <div className="wrap">
+          <img src="/logo.png" alt="Meetup Catch Up" className="hero-logo" />
           <span style={{ color: "var(--gold)", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 500 }}>Bangkok</span>
           <h1 style={{ marginTop: 10 }}>Find what's on tonight.</h1>
           <p style={{ marginBottom: 28 }}>A curated list of padel, pickleball, tennis, running, badminton and social meetups.</p>

@@ -14,7 +14,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="site">
           <div className="wrap">
             <a className="brand-block" href="/">
-              <img src="/logo.png" alt="Meetup Catch Up" className="brand-logo" />
               <span>
                 <span className="brand">Meetup Catch Up</span>
                 <span className="brand-sub">Bangkok Sports &amp; Social</span>
