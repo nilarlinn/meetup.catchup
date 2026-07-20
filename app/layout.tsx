@@ -1,19 +1,27 @@
 import "./globals.css";
-import { CalendarDays, PlusCircle, Info, Instagram, Mail } from "lucide-react";
+import { CalendarDays, PlusCircle, Info, Instagram, Mail, Sparkles, LayoutGrid, Ticket, LogOut } from "lucide-react";
 import { CONTACT } from "@/lib/contact";
+import { createClient } from "@/lib/supabase-server";
+import SignOutButton from "@/components/SignOutButton";
 
 export const metadata = {
   title: "Meetup Catch Up | Thailand Events",
   description: "Padel, pickleball, tennis, running and social meetups.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html lang="en">
       <body>
         <header className="site">
           <div className="wrap">
             <a className="brand-block" href="/">
+              <Sparkles size={20} color="var(--gold)" />
               <span>
                 <span className="brand">Meetup Catch Up</span>
                 <span className="brand-sub">Bangkok Sports &amp; Social</span>
@@ -24,6 +32,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <CalendarDays size={16} />
                 Events
               </a>
+              <a href="/#browse" className="nav-link">
+                <LayoutGrid size={16} />
+                Categories
+              </a>
               <a href="/about" className="nav-link">
                 <Info size={16} />
                 About
@@ -32,6 +44,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <PlusCircle size={16} />
                 List your event
               </a>
+              {user ? (
+                <>
+                  <a href="/account" className="nav-link">
+                    <Ticket size={16} />
+                    My Tickets
+                  </a>
+                  <SignOutButton />
+                </>
+              ) : (
+                <a href="/signup" className="btn">
+                  Sign Up
+                </a>
+              )}
             </nav>
           </div>
         </header>
@@ -50,8 +75,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div>
               <h4>Explore</h4>
               <a href="/">Events</a>
+              <a href="/#browse">Categories</a>
               <a href="/about">About</a>
               <a href="/submit">List your event</a>
+              <a href="/account">My Tickets</a>
             </div>
             <div>
               <h4>Connect</h4>
