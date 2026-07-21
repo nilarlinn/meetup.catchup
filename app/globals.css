@@ -393,12 +393,13 @@ footer.site-footer a.nav-link { display: inline-flex; }
   a.brand-block { justify-content: flex-start; }
   .section > *:not(.grid):not(.category-grid):not(.filter-row) { text-align: center; }
   .filter-row { justify-content: center; }
-  .category-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .category-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .category-tile { border-radius: 10px; }
   .footer-bottom { text-align: center; }
 }
 @media (min-width: 641px) {
   .mobile-nav-panel { display: none; }
 }
-@media (max-width: 420px) {
-  .category-grid { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 360px) {
+  .category-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
 }
