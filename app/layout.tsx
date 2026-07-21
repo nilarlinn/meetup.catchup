@@ -3,6 +3,7 @@ import { CalendarDays, PlusCircle, Info, Instagram, Mail, Sparkles, LayoutGrid, 
 import { CONTACT } from "@/lib/contact";
 import { createClient } from "@/lib/supabase-server";
 import SignOutButton from "@/components/SignOutButton";
+import MobileNav from "@/components/MobileNav";
 
 export const metadata = {
   title: "Meetup Catch Up | Thailand Events",
@@ -27,7 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <span className="brand-sub">Bangkok Sports &amp; Social</span>
               </span>
             </a>
-            <nav>
+            <MobileNav>
               <a href="/" className="nav-link">
                 <CalendarDays size={16} />
                 Events
@@ -57,7 +58,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   Sign Up
                 </a>
               )}
-            </nav>
+            </MobileNav>
           </div>
         </header>
 

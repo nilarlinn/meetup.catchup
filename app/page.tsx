@@ -8,7 +8,7 @@ const CATEGORIES = [
   { key: "tennis", label: "Tennis", keys: ["tennis"] },
   { key: "running", label: "Running", keys: ["running"] },
   { key: "badminton", label: "Badminton", keys: ["badminton"] },
-  { key: "social_party", label: "Social Party", keys: ["social", "party", "social_party"] },
+  { key: "social_party", label: "Social", keys: ["social", "party", "social_party"] },
   { key: "coffee_gathering", label: "Coffee Gathering", keys: ["coffee_gathering"] },
 ];
 
@@ -42,7 +42,7 @@ export default async function HomePage({
       <div className="hero hero-centered">
         <div className="wrap">
           <h1 className="hero-headline">
-            Find what's <span className="hero-accent">on</span> tonight.
+            Find what's on <span className="hero-accent">tonight.</span>
           </h1>
           <p className="hero-sub">
             Padel, pickleball, tennis, running and social meetups — curated across the whole country.
