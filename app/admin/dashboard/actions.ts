@@ -9,9 +9,15 @@ import { uploadEventPhoto } from "@/lib/upload";
 export async function createEvent(formData: FormData) {
   const admin = createAdminClient();
   const photo = formData.get("photo") as File | null;
-  const imageUrl = await uploadEventPhoto(admin, photo);
 
-  await admin.from("events").insert({
+  let imageUrl = "";
+  try {
+    imageUrl = await uploadEventPhoto(admin, photo);
+  } catch (e: any) {
+    redirect(`/admin/dashboard?error=${encodeURIComponent(e.message || "Photo upload failed")}`);
+  }
+
+  const { error } = await admin.from("events").insert({
     title: String(formData.get("title") || "").trim(),
     category: String(formData.get("category") || "social"),
     price_baht: Number(formData.get("price") || 0),
@@ -22,8 +28,15 @@ export async function createEvent(formData: FormData) {
     description: String(formData.get("description") || "").trim(),
     image_url: imageUrl,
   });
+
+  if (error) {
+    console.error("createEvent failed:", error);
+    redirect(`/admin/dashboard?error=${encodeURIComponent(error.message)}`);
+  }
+
   revalidatePath("/admin/dashboard");
   revalidatePath("/");
+  redirect("/admin/dashboard?saved=1");
 }
 
 export async function updateEvent(formData: FormData) {
@@ -33,10 +46,16 @@ export async function updateEvent(formData: FormData) {
   // Keep the existing photo unless a new one was uploaded.
   const existingImageUrl = String(formData.get("existing_image_url") || "");
   const photo = formData.get("photo") as File | null;
-  const newImageUrl = await uploadEventPhoto(admin, photo);
+
+  let newImageUrl = "";
+  try {
+    newImageUrl = await uploadEventPhoto(admin, photo);
+  } catch (e: any) {
+    redirect(`/admin/dashboard?error=${encodeURIComponent(e.message || "Photo upload failed")}`);
+  }
   const imageUrl = newImageUrl || existingImageUrl;
 
-  await admin
+  const { error } = await admin
     .from("events")
     .update({
       title: String(formData.get("title") || "").trim(),
@@ -50,8 +69,15 @@ export async function updateEvent(formData: FormData) {
       image_url: imageUrl,
     })
     .eq("id", id);
+
+  if (error) {
+    console.error("updateEvent failed:", error);
+    redirect(`/admin/dashboard?error=${encodeURIComponent(error.message)}`);
+  }
+
   revalidatePath("/admin/dashboard");
   revalidatePath("/");
+  redirect("/admin/dashboard?saved=1");
 }
 
 export async function deleteEvent(id: string) {

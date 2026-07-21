@@ -212,7 +212,7 @@ a.brand-block span.brand-sub { display: block; font-family: 'Work Sans', sans-se
 .event-hero {
   width: 100%;
   aspect-ratio: 21 / 9;
-  border-radius: 4px;
+  border-radius: 16px;
   background: linear-gradient(135deg, var(--gold), var(--wine));
   background-size: cover;
   background-position: center;

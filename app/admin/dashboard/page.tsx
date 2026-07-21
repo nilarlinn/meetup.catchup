@@ -11,7 +11,11 @@ import {
 
 export const revalidate = 0;
 
-export default async function AdminDashboard() {
+export default async function AdminDashboard({
+  searchParams,
+}: {
+  searchParams: { error?: string; saved?: string };
+}) {
   // Middleware already confirmed this request comes from a logged-in,
   // allow-listed admin before this page is ever rendered.
   const admin = createAdminClient();
@@ -36,6 +40,37 @@ export default async function AdminDashboard() {
           <button className="btn ghost" type="submit"><LogOut size={15} /> Sign out</button>
         </form>
       </div>
+
+      {searchParams.error && (
+        <div
+          style={{
+            background: "#FBEAEA",
+            border: "1px solid #E3B3B3",
+            color: "#8A2E2E",
+            borderRadius: 10,
+            padding: "12px 16px",
+            margin: "16px 0",
+            fontSize: 14,
+          }}
+        >
+          Couldn't save: {searchParams.error}
+        </div>
+      )}
+      {searchParams.saved && !searchParams.error && (
+        <div
+          style={{
+            background: "#EAF3E6",
+            border: "1px solid #B9D6AC",
+            color: "#3B6E2E",
+            borderRadius: 10,
+            padding: "12px 16px",
+            margin: "16px 0",
+            fontSize: 14,
+          }}
+        >
+          Saved successfully.
+        </div>
+      )}
 
       <h2>Pending submissions {pending.length ? `(${pending.length})` : ""}</h2>
       {pending.length === 0 && <p style={{ color: "var(--ink-soft)" }}>Nothing pending.</p>}
