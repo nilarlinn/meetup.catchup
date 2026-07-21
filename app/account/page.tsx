@@ -42,12 +42,21 @@ export default async function AccountPage() {
       <div className="grid">
         {tickets?.map((t: any) => (
           <a key={t.id} className="ticket" href={t.events ? `/events/${t.events.id}` : "#"}>
-            <div className="ticket-date">
-              <span className="day">{t.events?.day ?? "—"}</span>
-              <span className="month">{t.events?.month ?? ""}</span>
+            <div
+              className={`ticket-photo ${!t.events?.image_url ? "ticket-photo-empty" : ""}`}
+              style={t.events?.image_url ? { backgroundImage: `url(${t.events.image_url})` } : undefined}
+            >
+              <div className="ticket-date">
+                <span className="day">{t.events?.day ?? "—"}</span>
+                <span className="month">{t.events?.month ?? ""}</span>
+              </div>
+              <div className="ticket-cat-overlay">
+                <span className="ticket-cat" style={{ background: "white", color: "var(--charcoal)" }}>
+                  {STATUS_LABEL[t.status] ?? t.status}
+                </span>
+              </div>
             </div>
             <div className="ticket-body">
-              <span className="ticket-cat">{STATUS_LABEL[t.status] ?? t.status}</span>
               <h3>{t.events?.title ?? "Event no longer listed"}</h3>
               <p className="meta">{t.events?.location}</p>
               <div className="ticket-foot">

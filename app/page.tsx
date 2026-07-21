@@ -78,12 +78,19 @@ export default async function HomePage({
         <div className="grid">
           {events?.map((ev) => (
             <a key={ev.id} className="ticket" href={`/events/${ev.id}`}>
-              <div className="ticket-date">
-                <span className="day">{ev.day}</span>
-                <span className="month">{ev.month}</span>
+              <div
+                className={`ticket-photo ${!ev.image_url ? "ticket-photo-empty" : ""}`}
+                style={ev.image_url ? { backgroundImage: `url(${ev.image_url})` } : undefined}
+              >
+                <div className="ticket-date">
+                  <span className="day">{ev.day}</span>
+                  <span className="month">{ev.month}</span>
+                </div>
+                <div className="ticket-cat-overlay">
+                  <span className={`ticket-cat ticket-cat-${ev.category}`}>{ev.category}</span>
+                </div>
               </div>
               <div className="ticket-body">
-                <span className={`ticket-cat ticket-cat-${ev.category}`}>{ev.category}</span>
                 <h3>{ev.title}</h3>
                 <p className="meta">{ev.location}</p>
                 <p className="meta">{ev.details}</p>
