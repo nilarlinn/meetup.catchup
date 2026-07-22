@@ -121,6 +121,18 @@ a.brand-block span.brand-sub { display: block; font-family: 'Work Sans', sans-se
 }
 .hero-search { display: flex; gap: 10px; max-width: 480px; }
 .hero-search-centered { margin: 0 auto; }
+.hero-search-input-wrap { position: relative; flex: 1; display: flex; align-items: center; }
+.hero-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 20px;
+  width: auto;
+  opacity: 0.85;
+  pointer-events: none;
+}
+.hero-search-input-wrap input { padding-left: 46px; }
 .hero-search input {
   flex: 1;
   padding: 13px 18px;
@@ -418,6 +430,17 @@ footer.site-footer a.nav-link { display: inline-flex; }
   .category-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .category-tile { border-radius: 10px; }
   .footer-bottom { text-align: center; }
+  .grid { grid-template-columns: 1fr; gap: 16px; }
+  .ticket-photo { aspect-ratio: 16 / 9; }
+  .ticket-body { padding: 14px 16px; }
+  .ticket-body h3 { font-size: 16px; margin-bottom: 4px; }
+  .ticket-body .meta { font-size: 12px; margin: 1px 0; }
+  .ticket-foot { padding-top: 12px; margin-top: 10px; }
+  .ticket-date { top: 10px; left: 10px; padding: 6px 8px; min-width: 46px; border-radius: 8px; }
+  .ticket-date .day { font-size: 17px; }
+  .ticket-date .month { font-size: 8px; margin-top: 2px; }
+  .ticket-cat-overlay { top: 10px; right: 10px; }
+  .ticket-cat { font-size: 9px; padding: 4px 9px; }
 }
 @media (min-width: 641px) {
   .mobile-nav-panel { display: none; }
