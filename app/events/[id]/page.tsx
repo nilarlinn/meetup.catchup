@@ -29,7 +29,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
       <p className="meta meta-row" style={{ marginTop: 10 }}><CalendarDays size={15} /> {event.day} {event.month} · {event.location}</p>
       {event.details && <p className="meta">{event.details}</p>}
       {event.description && (
-        <p style={{ marginTop: 20, fontSize: 15, lineHeight: 1.8, color: "var(--ink)", fontWeight: 300 }}>{event.description}</p>
+        <p style={{ marginTop: 20, fontSize: 15, lineHeight: 1.9, color: "var(--ink)", fontWeight: 300, whiteSpace: "pre-line" }}>{event.description}</p>
       )}
       <p className="price" style={{ fontSize: 22, margin: "28px 0", borderTop: "none", paddingTop: 0 }}>
         {isFree ? "Free" : `฿${Number(event.price_baht).toFixed(0)}`}
