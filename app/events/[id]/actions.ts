@@ -76,7 +76,10 @@ export async function joinEvent(formData: FormData) {
         price_data: {
           currency: "thb",
           unit_amount: Math.round(priceBaht * 100), // satang
-          product_data: { name: event.title },
+          product_data: {
+            name: event.title,
+            images: event.image_url ? [event.image_url] : [],
+          },
         },
         quantity: 1,
       },

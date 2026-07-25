@@ -6,6 +6,17 @@ import { createAdminClient } from "@/lib/supabase-admin";
 import { createClient } from "@/lib/supabase-server";
 import { uploadEventPhoto } from "@/lib/upload";
 
+// Turns "2026-08-02" into { day: "02", month: "AUG" } so the existing
+// ticket-card display (which shows day/month separately) keeps working
+// without needing to reformat a real date on every page.
+function splitEventDate(eventDate: string) {
+  if (!eventDate) return { day: "", month: "" };
+  const d = new Date(`${eventDate}T00:00:00`);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = d.toLocaleString("en-US", { month: "short" }).toUpperCase();
+  return { day, month };
+}
+
 export async function createEvent(formData: FormData) {
   const admin = createAdminClient();
   const photo = formData.get("photo") as File | null;
@@ -17,12 +28,16 @@ export async function createEvent(formData: FormData) {
     redirect(`/admin/dashboard?error=${encodeURIComponent(e.message || "Photo upload failed")}`);
   }
 
+  const eventDate = String(formData.get("event_date") || "").trim();
+  const { day, month } = splitEventDate(eventDate);
+
   const { error } = await admin.from("events").insert({
     title: String(formData.get("title") || "").trim(),
     category: String(formData.get("category") || "social"),
     price_baht: Number(formData.get("price") || 0),
-    day: String(formData.get("day") || "").trim(),
-    month: String(formData.get("month") || "").trim(),
+    day,
+    month,
+    event_date: eventDate || null,
     location: String(formData.get("location") || "").trim(),
     details: String(formData.get("details") || "").trim(),
     description: String(formData.get("description") || "").trim(),
@@ -55,14 +70,18 @@ export async function updateEvent(formData: FormData) {
   }
   const imageUrl = newImageUrl || existingImageUrl;
 
+  const eventDate = String(formData.get("event_date") || "").trim();
+  const { day, month } = splitEventDate(eventDate);
+
   const { error } = await admin
     .from("events")
     .update({
       title: String(formData.get("title") || "").trim(),
       category: String(formData.get("category") || "social"),
       price_baht: Number(formData.get("price") || 0),
-      day: String(formData.get("day") || "").trim(),
-      month: String(formData.get("month") || "").trim(),
+      day,
+      month,
+      event_date: eventDate || null,
       location: String(formData.get("location") || "").trim(),
       details: String(formData.get("details") || "").trim(),
       description: String(formData.get("description") || "").trim(),

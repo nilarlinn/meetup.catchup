@@ -18,10 +18,15 @@ export default async function HomePage({
   searchParams: { category?: string; q?: string };
 }) {
   const supabase = createClient();
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
   const { data: allEvents } = await supabase
     .from("events")
     .select("*")
-    .order("created_at", { ascending: false });
+    // Hide events that have already happened. Events without a date set
+    // (event_date is null) are kept visible so nothing vanishes by accident.
+    .or(`event_date.is.null,event_date.gte.${today}`)
+    .order("event_date", { ascending: true, nullsFirst: false });
 
   const activeCategory = searchParams.category;
   const activeGroup = CATEGORIES.find((c) => c.key === activeCategory);

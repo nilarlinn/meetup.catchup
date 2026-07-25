@@ -109,8 +109,11 @@ export default async function AdminDashboard({
           </select>
         </div>
         <div className="form-row"><label>Price in THB (0 for free)</label><input name="price" type="number" step="0.01" min="0" defaultValue="0" /></div>
-        <div className="form-row"><label>Day</label><input name="day" placeholder="26" /></div>
-        <div className="form-row"><label>Month</label><input name="month" placeholder="Jul" /></div>
+        <div className="form-row">
+          <label>Event date</label>
+          <input name="event_date" type="date" required />
+          <p className="hint">The event disappears from the site automatically the day after this date.</p>
+        </div>
         <div className="form-row"><label>Location / time</label><input name="location" /></div>
         <div className="form-row"><label>Extra details</label><input name="details" /></div>
         <div className="form-row">
@@ -150,8 +153,10 @@ export default async function AdminDashboard({
                       </select>
                     </div>
                     <div className="form-row"><label>Price in THB</label><input name="price" type="number" step="0.01" min="0" defaultValue={ev.price_baht} /></div>
-                    <div className="form-row"><label>Day</label><input name="day" defaultValue={ev.day} /></div>
-                    <div className="form-row"><label>Month</label><input name="month" defaultValue={ev.month} /></div>
+                    <div className="form-row">
+                      <label>Event date</label>
+                      <input name="event_date" type="date" defaultValue={ev.event_date || ""} required />
+                    </div>
                     <div className="form-row"><label>Location / time</label><input name="location" defaultValue={ev.location} /></div>
                     <div className="form-row"><label>Extra details</label><input name="details" defaultValue={ev.details} /></div>
                     <div className="form-row">

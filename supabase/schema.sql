@@ -8,6 +8,7 @@ create table if not exists events (
   category text not null default 'social',
   day text not null default '',
   month text not null default '',
+  event_date date,
   location text not null default '',
   details text not null default '',
   description text not null default '',
