@@ -4,6 +4,7 @@ import { CONTACT } from "@/lib/contact";
 import { createClient } from "@/lib/supabase-server";
 import SignOutButton from "@/components/SignOutButton";
 import MobileNav from "@/components/MobileNav";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
   title: "Meetup Catch Up | Thailand Events",
@@ -95,6 +96,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <span>© {new Date().getFullYear()} Meetup Catch Up. All rights reserved.</span>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   );
