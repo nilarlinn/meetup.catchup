@@ -101,36 +101,68 @@ export async function updateEvent(formData: FormData) {
 
 export async function deleteEvent(id: string) {
   const admin = createAdminClient();
-  await admin.from("events").delete().eq("id", id);
+  const { error } = await admin.from("events").delete().eq("id", id);
+
+  if (error) {
+    console.error("deleteEvent failed:", error);
+    redirect(`/admin/dashboard?error=${encodeURIComponent(error.message)}`);
+  }
+
   revalidatePath("/admin/dashboard");
   revalidatePath("/");
+  redirect("/admin/dashboard?saved=1");
 }
 
 export async function approveSubmission(id: string) {
   const admin = createAdminClient();
   const { data: sub } = await admin.from("submissions").select("*").eq("id", id).single();
-  if (!sub) return;
+  if (!sub) {
+    redirect(`/admin/dashboard?error=${encodeURIComponent("Submission not found")}`);
+  }
 
-  await admin.from("events").insert({
-    title: sub.title,
-    category: sub.category,
-    price_baht: sub.price_baht,
-    day: sub.day,
-    month: sub.month,
-    location: sub.location,
-    details: sub.details,
-    description: sub.description,
-    image_url: sub.image_url,
+  const { error: insertError } = await admin.from("events").insert({
+    title: sub!.title,
+    category: sub!.category,
+    price_baht: sub!.price_baht,
+    day: sub!.day,
+    month: sub!.month,
+    location: sub!.location,
+    details: sub!.details,
+    description: sub!.description,
+    image_url: sub!.image_url,
   });
-  await admin.from("submissions").update({ status: "approved" }).eq("id", id);
+
+  if (insertError) {
+    console.error("approveSubmission failed:", insertError);
+    redirect(`/admin/dashboard?error=${encodeURIComponent(insertError.message)}`);
+  }
+
+  const { error: statusError } = await admin
+    .from("submissions")
+    .update({ status: "approved" })
+    .eq("id", id);
+
+  if (statusError) {
+    console.error("approveSubmission status update failed:", statusError);
+    redirect(`/admin/dashboard?error=${encodeURIComponent(statusError.message)}`);
+  }
+
   revalidatePath("/admin/dashboard");
   revalidatePath("/");
+  redirect("/admin/dashboard?saved=1");
 }
 
 export async function dismissSubmission(id: string) {
   const admin = createAdminClient();
-  await admin.from("submissions").update({ status: "dismissed" }).eq("id", id);
+  const { error } = await admin.from("submissions").update({ status: "dismissed" }).eq("id", id);
+
+  if (error) {
+    console.error("dismissSubmission failed:", error);
+    redirect(`/admin/dashboard?error=${encodeURIComponent(error.message)}`);
+  }
+
   revalidatePath("/admin/dashboard");
+  redirect("/admin/dashboard?saved=1");
 }
 
 export async function signOutAdmin() {
