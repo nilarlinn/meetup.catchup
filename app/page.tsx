@@ -53,10 +53,7 @@ export default async function HomePage({
             Padel, pickleball, tennis, running and social meetups — curated across the whole country.
           </p>
           <form action="/" method="GET" className="hero-search hero-search-centered">
-            <div className="hero-search-input-wrap">
-              <img src="/logo-icon-transparent.png" alt="" className="hero-search-icon" />
-              <input type="text" name="q" placeholder="Search events" defaultValue={query} />
-            </div>
+            <input type="text" name="q" placeholder="Search events" defaultValue={query} />
             <button type="submit" className="btn">Search</button>
           </form>
         </div>

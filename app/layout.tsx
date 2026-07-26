@@ -1,5 +1,5 @@
 import "./globals.css";
-import { CalendarDays, PlusCircle, Info, Instagram, Mail, Sparkles, LayoutGrid, Ticket, LogOut } from "lucide-react";
+import { CalendarDays, PlusCircle, Info, Instagram, Mail, LayoutGrid, Ticket, LogOut } from "lucide-react";
 import { CONTACT } from "@/lib/contact";
 import { createClient } from "@/lib/supabase-server";
 import SignOutButton from "@/components/SignOutButton";
@@ -22,7 +22,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <header className="site">
           <div className="wrap">
             <a className="brand-block" href="/">
-              <Sparkles size={20} color="var(--gold)" />
+              <img src="/logo-icon-transparent.png" alt="" className="brand-logo-icon" />
               <span>
                 <span className="brand">Meetup Catch Up</span>
                 <span className="brand-sub">Bangkok Sports &amp; Social</span>
