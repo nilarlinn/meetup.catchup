@@ -350,6 +350,8 @@ table.admin th { font-size: 11px; text-transform: uppercase; color: var(--ink-so
 .ticket-cat-overlay .ticket-cat { margin-bottom: 0; box-shadow: 0 6px 16px rgba(0,0,0,0.25); }
 .ticket-body h3 { margin: 0 0 7px; font-size: 18px; font-weight: 500; line-height: 1.3; }
 .ticket-body .meta { font-size: 13px; color: var(--ink-soft); margin: 2px 0; font-weight: 300; }
+.spots-left { color: var(--gold) !important; font-weight: 500 !important; }
+.spots-full { color: var(--wine) !important; }
 .ticket-foot {
   margin-top: auto;
   padding-top: 16px;

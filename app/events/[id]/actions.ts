@@ -30,6 +30,19 @@ export async function joinEvent(formData: FormData) {
     throw new Error("Event not found.");
   }
 
+  // Re-check capacity here too (not just in the UI), so a stale page load
+  // or a direct form submission can't slip past a sold-out event.
+  if (event.capacity != null) {
+    const { count } = await admin
+      .from("tickets")
+      .select("id", { count: "exact", head: true })
+      .eq("event_id", event.id)
+      .in("status", ["paid", "free_confirmed"]);
+    if ((count || 0) >= event.capacity) {
+      throw new Error("Sorry, this event is fully booked.");
+    }
+  }
+
   const priceBaht = Number(event.price_baht);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
   const eventWhen = `${event.day} ${event.month}`;

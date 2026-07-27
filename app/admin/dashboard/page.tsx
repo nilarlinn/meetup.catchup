@@ -114,6 +114,11 @@ export default async function AdminDashboard({
           <input name="event_date" type="date" required />
           <p className="hint">The event disappears from the site automatically the day after this date.</p>
         </div>
+        <div className="form-row">
+          <label>Capacity (spots available)</label>
+          <input name="capacity" type="number" min="0" step="1" placeholder="Leave blank for no limit" />
+          <p className="hint">Shows "X spots left" based on tickets booked through this website. Leave blank if there's no cap, or if joining happens through a different app.</p>
+        </div>
         <div className="form-row"><label>Location / time</label><input name="location" /></div>
         <div className="form-row"><label>Extra details</label><input name="details" /></div>
         <div className="form-row">
@@ -156,6 +161,10 @@ export default async function AdminDashboard({
                     <div className="form-row">
                       <label>Event date</label>
                       <input name="event_date" type="date" defaultValue={ev.event_date || ""} required />
+                    </div>
+                    <div className="form-row">
+                      <label>Capacity (spots available)</label>
+                      <input name="capacity" type="number" min="0" step="1" defaultValue={ev.capacity ?? ""} placeholder="Leave blank for no limit" />
                     </div>
                     <div className="form-row"><label>Location / time</label><input name="location" defaultValue={ev.location} /></div>
                     <div className="form-row"><label>Extra details</label><input name="details" defaultValue={ev.details} /></div>

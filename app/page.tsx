@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase-server";
+import { createAdminClient } from "@/lib/supabase-admin";
 
 export const revalidate = 0; // always fetch fresh
 
@@ -27,6 +28,21 @@ export default async function HomePage({
     // (event_date is null) are kept visible so nothing vanishes by accident.
     .or(`event_date.is.null,event_date.gte.${today}`)
     .order("event_date", { ascending: true, nullsFirst: false });
+
+  // Count confirmed tickets per event, so ticket cards can show "X spots
+  // left" for events with a capacity set. Only counts bookings made
+  // through this website's own Join & Pay flow. Uses the admin client
+  // because RLS otherwise blocks public reads of the tickets table
+  // entirely — only the counts are used below, never the raw rows.
+  const admin = createAdminClient();
+  const { data: ticketRows } = await admin
+    .from("tickets")
+    .select("event_id, status")
+    .in("status", ["paid", "free_confirmed"]);
+  const bookedCounts: Record<string, number> = {};
+  ticketRows?.forEach((t) => {
+    bookedCounts[t.event_id] = (bookedCounts[t.event_id] || 0) + 1;
+  });
 
   const activeCategory = searchParams.category;
   const activeGroup = CATEGORIES.find((c) => c.key === activeCategory);
@@ -81,33 +97,42 @@ export default async function HomePage({
         )}
 
         <div className="grid">
-          {events?.map((ev) => (
-            <a key={ev.id} className="ticket" href={`/events/${ev.id}`}>
-              <div
-                className={`ticket-photo ${!ev.image_url ? "ticket-photo-empty" : ""}`}
-                style={ev.image_url ? { backgroundImage: `url(${ev.image_url})` } : undefined}
-              >
-                <div className="ticket-date">
-                  <span className="day">{ev.day}</span>
-                  <span className="month">{ev.month}</span>
+          {events?.map((ev) => {
+            const booked = bookedCounts[ev.id] || 0;
+            const spotsLeft = ev.capacity != null ? Math.max(ev.capacity - booked, 0) : null;
+            return (
+              <a key={ev.id} className="ticket" href={`/events/${ev.id}`}>
+                <div
+                  className={`ticket-photo ${!ev.image_url ? "ticket-photo-empty" : ""}`}
+                  style={ev.image_url ? { backgroundImage: `url(${ev.image_url})` } : undefined}
+                >
+                  <div className="ticket-date">
+                    <span className="day">{ev.day}</span>
+                    <span className="month">{ev.month}</span>
+                  </div>
+                  <div className="ticket-cat-overlay">
+                    <span className={`ticket-cat ticket-cat-${ev.category}`}>{ev.category}</span>
+                  </div>
                 </div>
-                <div className="ticket-cat-overlay">
-                  <span className={`ticket-cat ticket-cat-${ev.category}`}>{ev.category}</span>
+                <div className="ticket-body">
+                  <h3>{ev.title}</h3>
+                  <p className="meta">{ev.location}</p>
+                  <p className="meta">{ev.details}</p>
+                  {spotsLeft !== null && (
+                    <p className={`meta spots-left ${spotsLeft === 0 ? "spots-full" : ""}`}>
+                      {spotsLeft === 0 ? "Sold out" : `${spotsLeft} of ${ev.capacity} spots left`}
+                    </p>
+                  )}
+                  <div className="ticket-foot">
+                    <span className="ticket-price">
+                      {Number(ev.price_baht) === 0 ? "Free" : `฿${Number(ev.price_baht).toFixed(0)}`}
+                    </span>
+                    <span className="ticket-details">Details →</span>
+                  </div>
                 </div>
-              </div>
-              <div className="ticket-body">
-                <h3>{ev.title}</h3>
-                <p className="meta">{ev.location}</p>
-                <p className="meta">{ev.details}</p>
-                <div className="ticket-foot">
-                  <span className="ticket-price">
-                    {Number(ev.price_baht) === 0 ? "Free" : `฿${Number(ev.price_baht).toFixed(0)}`}
-                  </span>
-                  <span className="ticket-details">Details →</span>
-                </div>
-              </div>
-            </a>
-          ))}
+              </a>
+            );
+          })}
         </div>
 
         <div style={{ marginTop: 72 }}>

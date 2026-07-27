@@ -30,6 +30,8 @@ export async function createEvent(formData: FormData) {
 
   const eventDate = String(formData.get("event_date") || "").trim();
   const { day, month } = splitEventDate(eventDate);
+  const capacityRaw = String(formData.get("capacity") || "").trim();
+  const capacity = capacityRaw ? Number(capacityRaw) : null;
 
   const { error } = await admin.from("events").insert({
     title: String(formData.get("title") || "").trim(),
@@ -38,6 +40,7 @@ export async function createEvent(formData: FormData) {
     day,
     month,
     event_date: eventDate || null,
+    capacity,
     location: String(formData.get("location") || "").trim(),
     details: String(formData.get("details") || "").trim(),
     description: String(formData.get("description") || "").trim(),
@@ -72,6 +75,8 @@ export async function updateEvent(formData: FormData) {
 
   const eventDate = String(formData.get("event_date") || "").trim();
   const { day, month } = splitEventDate(eventDate);
+  const capacityRaw = String(formData.get("capacity") || "").trim();
+  const capacity = capacityRaw ? Number(capacityRaw) : null;
 
   const { error } = await admin
     .from("events")
@@ -82,6 +87,7 @@ export async function updateEvent(formData: FormData) {
       day,
       month,
       event_date: eventDate || null,
+      capacity,
       location: String(formData.get("location") || "").trim(),
       details: String(formData.get("details") || "").trim(),
       description: String(formData.get("description") || "").trim(),
