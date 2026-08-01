@@ -1,17 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
 
 :root {
-  --charcoal: #17161A;
-  --charcoal-soft: #232228;
-  --gold: #B79458;
-  --gold-light: #D9BE8A;
-  --wine: #6E3B3B;
-  --pink: #C0577E;
-  --ivory: #F7F3EC;
+  --charcoal: #7C5337;
+  --charcoal-soft: #5E3E28;
+  --gold: #6E9BA0;
+  --gold-light: #9FC3C8;
+  --wine: #8B4A34;
+  --pink: #BEE1D8;
+  --ivory: #F9EDDC;
   --card: #FFFFFF;
-  --ink: #201F22;
-  --ink-soft: #726C63;
-  --border: rgba(32,31,34,0.09);
+  --ink: #3B2A1E;
+  --ink-soft: #7C6A5A;
+  --border: rgba(59,42,30,0.1);
 }
 
 * { box-sizing: border-box; }
