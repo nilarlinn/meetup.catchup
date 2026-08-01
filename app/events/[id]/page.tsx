@@ -3,8 +3,40 @@ import { createClient } from "@/lib/supabase-server";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { joinEvent } from "./actions";
 import { CalendarDays, Ticket, CreditCard } from "lucide-react";
+import ShareButton from "@/components/ShareButton";
+import type { Metadata } from "next";
 
 export const revalidate = 0;
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const supabase = createClient();
+  const { data: event } = await supabase
+    .from("events")
+    .select("*")
+    .eq("id", params.id)
+    .single();
+
+  if (!event) return {};
+
+  const title = `${event.title} | Meetup Catch Up`;
+  const description = event.details || event.description || "Padel, pickleball, tennis, running and social meetups in Bangkok.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: event.image_url ? [{ url: event.image_url }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: event.image_url ? [event.image_url] : [],
+    },
+  };
+}
 
 export default async function EventPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
@@ -37,8 +69,16 @@ export default async function EventPage({ params }: { params: { id: string } }) 
         style={event.image_url ? { backgroundImage: `url(${event.image_url})` } : undefined}
       />
 
-      <span className="cat" style={{ display: "block", marginBottom: 10 }}>{event.category}</span>
-      <h1 style={{ fontSize: 34 }}>{event.title}</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
+        <div>
+          <span className="cat" style={{ display: "block", marginBottom: 10 }}>{event.category}</span>
+          <h1 style={{ fontSize: 34, margin: 0 }}>{event.title}</h1>
+        </div>
+        <ShareButton
+          title={event.title}
+          url={`${process.env.NEXT_PUBLIC_SITE_URL}/events/${event.id}`}
+        />
+      </div>
       <p className="meta meta-row" style={{ marginTop: 10 }}><CalendarDays size={15} /> {event.day} {event.month} · {event.location}</p>
       {event.details && <p className="meta">{event.details}</p>}
       {event.description && (

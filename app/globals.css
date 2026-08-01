@@ -206,6 +206,7 @@ a.brand-block span.brand-sub { display: block; font-family: 'Work Sans', sans-se
 .btn:hover { background: var(--gold); color: var(--charcoal); }
 .btn.ghost { background: transparent; border: 1px solid var(--border); color: var(--ink); }
 .btn.ghost:hover { background: var(--ivory); border-color: var(--ink-soft); color: var(--ink); }
+.share-btn { flex-shrink: 0; white-space: nowrap; }
 .btn.pink { background: var(--wine); color: white; }
 
 .meta-row { display: flex; align-items: center; gap: 7px; }
