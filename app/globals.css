@@ -221,6 +221,26 @@ a.brand-block span.brand-sub { display: block; font-family: 'Work Sans', sans-se
   margin-bottom: 32px;
 }
 
+.pay-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+.pay-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+.pay-tab.active { border-color: var(--gold); color: var(--charcoal); background: var(--ivory); }
+
 .form-row { margin-bottom: 18px; }
 .form-row label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 7px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.05em; }
 .form-row input, .form-row textarea, .form-row select {

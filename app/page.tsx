@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase-server";
 import { createAdminClient } from "@/lib/supabase-admin";
+import { formatTime } from "@/lib/format";
 
 export const revalidate = 0; // always fetch fresh
 
@@ -131,7 +132,7 @@ export default async function HomePage({
                 </div>
                 <div className="ticket-body">
                   <h3>{ev.title}</h3>
-                  <p className="meta">{ev.location}</p>
+                  <p className="meta">{ev.location}{ev.start_time ? ` · ${formatTime(ev.start_time)}` : ""}</p>
                   <p className="meta">{ev.details}</p>
                   {spotsLeft !== null && (
                     <p className={`meta spots-left ${spotsLeft === 0 ? "spots-full" : ""}`}>

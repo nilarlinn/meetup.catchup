@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { stripe } from "@/lib/stripe";
-import { sendTicketConfirmationEmail } from "@/lib/email";
+import { sendTicketConfirmationEmail, sendPaymentPendingEmail, sendManualPaymentAlertEmail } from "@/lib/email";
 
 export async function joinEvent(formData: FormData) {
   const eventId = String(formData.get("eventId"));
@@ -115,4 +115,71 @@ export async function joinEvent(formData: FormData) {
   });
 
   redirect(session.url!);
+}
+
+// The customer scanned the organizer's own PromptPay QR and paid
+// directly to their bank account — no Stripe involved, so there's no
+// automatic confirmation. This just records the claim, holds the spot
+// as "awaiting_confirmation" (not counted toward capacity until the
+// organizer confirms), and notifies both sides.
+export async function payByDirectQR(formData: FormData) {
+  const eventId = String(formData.get("eventId"));
+  const name = String(formData.get("name") || "").trim();
+  const email = String(formData.get("email") || "").trim();
+
+  if (!eventId || !name || !email) {
+    throw new Error("Name and email are required.");
+  }
+
+  const admin = createAdminClient();
+
+  const { data: event, error } = await admin
+    .from("events")
+    .select("*")
+    .eq("id", eventId)
+    .single();
+
+  if (error || !event) {
+    throw new Error("Event not found.");
+  }
+
+  if (event.capacity != null) {
+    const { count } = await admin
+      .from("tickets")
+      .select("id", { count: "exact", head: true })
+      .eq("event_id", event.id)
+      .in("status", ["paid", "free_confirmed"]);
+    if ((count || 0) >= event.capacity) {
+      throw new Error("Sorry, this event is fully booked.");
+    }
+  }
+
+  const priceBaht = Number(event.price_baht);
+  const eventWhen = `${event.day} ${event.month}`;
+  const priceLabel = `฿${priceBaht.toFixed(0)}`;
+
+  await admin.from("tickets").insert({
+    event_id: event.id,
+    name,
+    email,
+    status: "awaiting_confirmation",
+  });
+
+  await sendPaymentPendingEmail({
+    to: email,
+    name,
+    eventTitle: event.title,
+    eventWhen,
+    eventWhere: event.location,
+    priceLabel,
+  });
+
+  await sendManualPaymentAlertEmail({
+    name,
+    email,
+    eventTitle: event.title,
+    priceLabel,
+  });
+
+  redirect(`/success?event=${event.id}&pending=1`);
 }

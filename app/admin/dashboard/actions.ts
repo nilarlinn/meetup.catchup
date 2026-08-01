@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { createClient } from "@/lib/supabase-server";
 import { uploadEventPhoto } from "@/lib/upload";
+import { sendTicketConfirmationEmail } from "@/lib/email";
 
 // Turns "2026-08-02" into { day: "02", month: "AUG" } so the existing
 // ticket-card display (which shows day/month separately) keeps working
@@ -32,6 +33,7 @@ export async function createEvent(formData: FormData) {
   const { day, month } = splitEventDate(eventDate);
   const capacityRaw = String(formData.get("capacity") || "").trim();
   const capacity = capacityRaw ? Number(capacityRaw) : null;
+  const startTime = String(formData.get("start_time") || "").trim() || null;
   const endTime = String(formData.get("end_time") || "").trim() || null;
 
   const { error } = await admin.from("events").insert({
@@ -42,6 +44,7 @@ export async function createEvent(formData: FormData) {
     month,
     event_date: eventDate || null,
     capacity,
+    start_time: startTime,
     end_time: endTime,
     location: String(formData.get("location") || "").trim(),
     details: String(formData.get("details") || "").trim(),
@@ -79,6 +82,7 @@ export async function updateEvent(formData: FormData) {
   const { day, month } = splitEventDate(eventDate);
   const capacityRaw = String(formData.get("capacity") || "").trim();
   const capacity = capacityRaw ? Number(capacityRaw) : null;
+  const startTime = String(formData.get("start_time") || "").trim() || null;
   const endTime = String(formData.get("end_time") || "").trim() || null;
 
   const { error } = await admin
@@ -91,6 +95,7 @@ export async function updateEvent(formData: FormData) {
       month,
       event_date: eventDate || null,
       capacity,
+    start_time: startTime,
     end_time: endTime,
       location: String(formData.get("location") || "").trim(),
       details: String(formData.get("details") || "").trim(),
@@ -179,4 +184,71 @@ export async function signOutAdmin() {
   const supabase = createClient();
   await supabase.auth.signOut();
   redirect("/admin/login");
+}
+
+export async function updatePaymentQR(formData: FormData) {
+  const admin = createAdminClient();
+  const photo = formData.get("qr_photo") as File | null;
+
+  if (!photo || photo.size === 0) {
+    redirect(`/admin/dashboard?error=${encodeURIComponent("Choose a QR code image first")}`);
+  }
+
+  let qrUrl = "";
+  try {
+    qrUrl = await uploadEventPhoto(admin, photo);
+  } catch (e: any) {
+    redirect(`/admin/dashboard?error=${encodeURIComponent(e.message || "QR upload failed")}`);
+  }
+
+  const { error } = await admin.from("site_settings").update({ promptpay_qr_url: qrUrl }).eq("id", 1);
+
+  if (error) {
+    console.error("updatePaymentQR failed:", error);
+    redirect(`/admin/dashboard?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/events", "layout");
+  redirect("/admin/dashboard?saved=1");
+}
+
+// Called when the organizer has checked their bank app and confirms a
+// direct-QR payment actually came through. Flips the ticket to "paid"
+// and sends the customer their real confirmation email.
+export async function confirmManualPayment(ticketId: string) {
+  const admin = createAdminClient();
+
+  const { data: ticket } = await admin
+    .from("tickets")
+    .select("*, events(*)")
+    .eq("id", ticketId)
+    .single();
+
+  if (!ticket) {
+    redirect(`/admin/dashboard?error=${encodeURIComponent("Ticket not found")}`);
+  }
+
+  const { error } = await admin.from("tickets").update({ status: "paid" }).eq("id", ticketId);
+
+  if (error) {
+    console.error("confirmManualPayment failed:", error);
+    redirect(`/admin/dashboard?error=${encodeURIComponent(error.message)}`);
+  }
+
+  const ev = ticket!.events;
+  if (ev) {
+    await sendTicketConfirmationEmail({
+      to: ticket!.email,
+      name: ticket!.name,
+      eventTitle: ev.title,
+      eventWhen: `${ev.day} ${ev.month}`,
+      eventWhere: ev.location,
+      paid: true,
+      priceLabel: `฿${Number(ev.price_baht).toFixed(0)}`,
+    });
+  }
+
+  revalidatePath("/admin/dashboard");
+  redirect("/admin/dashboard?saved=1");
 }

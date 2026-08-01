@@ -1,5 +1,5 @@
 import { createAdminClient } from "@/lib/supabase-admin";
-import { LogOut, Check, X, PlusCircle, Save, Trash2 } from "lucide-react";
+import { LogOut, Check, X, PlusCircle, Save, Trash2, QrCode } from "lucide-react";
 import {
   createEvent,
   updateEvent,
@@ -7,6 +7,8 @@ import {
   approveSubmission,
   dismissSubmission,
   signOutAdmin,
+  updatePaymentQR,
+  confirmManualPayment,
 } from "./actions";
 
 export const revalidate = 0;
@@ -20,7 +22,7 @@ export default async function AdminDashboard({
   // allow-listed admin before this page is ever rendered.
   const admin = createAdminClient();
 
-  const [{ data: events }, { data: submissions }, { data: tickets }] = await Promise.all([
+  const [{ data: events }, { data: submissions }, { data: tickets }, { data: settings }] = await Promise.all([
     admin.from("events").select("*").order("created_at", { ascending: false }),
     admin.from("submissions").select("*").order("created_at", { ascending: false }),
     admin
@@ -28,6 +30,7 @@ export default async function AdminDashboard({
       .select("*, events(title)")
       .order("created_at", { ascending: false })
       .limit(100),
+    admin.from("site_settings").select("*").eq("id", 1).single(),
   ]);
 
   const pending = submissions?.filter((s) => s.status === "pending") || [];
@@ -72,6 +75,30 @@ export default async function AdminDashboard({
         </div>
       )}
 
+      <h2>Direct payment QR (Thai bank transfer)</h2>
+      <p className="hint" style={{ marginBottom: 16 }}>
+        Upload a photo of your own PromptPay QR code. On paid events, customers can choose to scan this
+        and pay you directly — instant to your bank account, no Stripe payout wait. Since it bypasses
+        Stripe, nothing confirms automatically: you'll get an email when someone pays this way, and need
+        to check your bank app and click "Mark as paid" below.
+      </p>
+      {settings?.promptpay_qr_url && (
+        <img
+          src={settings.promptpay_qr_url}
+          alt="Current payment QR"
+          style={{ width: 160, height: 160, objectFit: "contain", border: "1px solid var(--border)", borderRadius: 10, marginBottom: 16, background: "white" }}
+        />
+      )}
+      <form action={updatePaymentQR} style={{ marginBottom: 40 }}>
+        <div className="form-row">
+          <label>{settings?.promptpay_qr_url ? "Replace QR photo" : "Upload QR photo"}</label>
+          <input name="qr_photo" type="file" accept="image/*" required />
+        </div>
+        <button className="btn" type="submit">
+          <QrCode size={16} /> Save QR code
+        </button>
+      </form>
+
       <h2>Pending submissions {pending.length ? `(${pending.length})` : ""}</h2>
       {pending.length === 0 && <p style={{ color: "var(--ink-soft)" }}>Nothing pending.</p>}
       {pending.map((s) => (
@@ -114,16 +141,20 @@ export default async function AdminDashboard({
           <input name="event_date" type="date" required />
         </div>
         <div className="form-row">
+          <label>Start time</label>
+          <input name="start_time" type="time" />
+        </div>
+        <div className="form-row">
           <label>End time (optional)</label>
           <input name="end_time" type="time" />
-          <p className="hint">The event disappears from the site right after this time. Leave blank to just hide it at the end of the day instead.</p>
+          <p className="hint">Only needed for a firm cutoff (e.g. a fixed padel slot). Leave blank for events like Social where there's no set end — the event just shows the start time and hides at the end of the day.</p>
         </div>
         <div className="form-row">
           <label>Capacity (spots available)</label>
           <input name="capacity" type="number" min="0" step="1" placeholder="Leave blank for no limit" />
           <p className="hint">Shows "X spots left" based on tickets booked through this website. Leave blank if there's no cap, or if joining happens through a different app.</p>
         </div>
-        <div className="form-row"><label>Location / time</label><input name="location" /></div>
+        <div className="form-row"><label>Location</label><input name="location" placeholder="e.g. Pad Thai Padel Club" /></div>
         <div className="form-row"><label>Extra details</label><input name="details" /></div>
         <div className="form-row">
           <label>Event photo</label>
@@ -167,6 +198,10 @@ export default async function AdminDashboard({
                       <input name="event_date" type="date" defaultValue={ev.event_date || ""} required />
                     </div>
                     <div className="form-row">
+                      <label>Start time</label>
+                      <input name="start_time" type="time" defaultValue={ev.start_time || ""} />
+                    </div>
+                    <div className="form-row">
                       <label>End time (optional)</label>
                       <input name="end_time" type="time" defaultValue={ev.end_time || ""} />
                     </div>
@@ -174,7 +209,7 @@ export default async function AdminDashboard({
                       <label>Capacity (spots available)</label>
                       <input name="capacity" type="number" min="0" step="1" defaultValue={ev.capacity ?? ""} placeholder="Leave blank for no limit" />
                     </div>
-                    <div className="form-row"><label>Location / time</label><input name="location" defaultValue={ev.location} /></div>
+                    <div className="form-row"><label>Location</label><input name="location" defaultValue={ev.location} /></div>
                     <div className="form-row"><label>Extra details</label><input name="details" defaultValue={ev.details} /></div>
                     <div className="form-row">
                       <label>Event photo</label>
@@ -210,7 +245,7 @@ export default async function AdminDashboard({
       <h2>Recent tickets</h2>
       <table className="admin">
         <thead>
-          <tr><th>Event</th><th>Name</th><th>Email</th><th>Status</th></tr>
+          <tr><th>Event</th><th>Name</th><th>Email</th><th>Status</th><th></th></tr>
         </thead>
         <tbody>
           {tickets?.map((t: any) => (
@@ -220,8 +255,17 @@ export default async function AdminDashboard({
               <td>{t.email}</td>
               <td>
                 <span className={`badge ${t.status === "paid" || t.status === "free_confirmed" ? "paid" : "pending"}`}>
-                  {t.status}
+                  {t.status === "awaiting_confirmation" ? "awaiting confirmation" : t.status}
                 </span>
+              </td>
+              <td>
+                {t.status === "awaiting_confirmation" && (
+                  <form action={confirmManualPayment.bind(null, t.id)}>
+                    <button className="btn" type="submit" style={{ padding: "6px 12px", fontSize: 12 }}>
+                      <Check size={13} /> Mark as paid
+                    </button>
+                  </form>
+                )}
               </td>
             </tr>
           ))}

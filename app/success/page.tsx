@@ -6,9 +6,28 @@ export const revalidate = 0;
 export default async function SuccessPage({
   searchParams,
 }: {
-  searchParams: { session_id?: string; event?: string };
+  searchParams: { session_id?: string; event?: string; pending?: string };
 }) {
   const supabase = createClient();
+
+  // Direct Thai QR payment — awaiting manual confirmation, not paid via Stripe.
+  if (searchParams.event && searchParams.pending) {
+    const { data: event } = await supabase
+      .from("events")
+      .select("title")
+      .eq("id", searchParams.event)
+      .single();
+
+    return (
+      <main className="wrap section" style={{ maxWidth: 520 }}>
+        <div className="note">
+          Thanks! We've noted your payment for {event?.title || "the event"} and your spot is being
+          held. The organizer will check the transfer and send a final confirmation email shortly.
+        </div>
+        <a className="btn ghost" href="/">Back to events</a>
+      </main>
+    );
+  }
 
   // Free event path
   if (searchParams.event) {
