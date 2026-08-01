@@ -19,15 +19,30 @@ export default async function HomePage({
   searchParams: { category?: string; q?: string };
 }) {
   const supabase = createClient();
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
-  const { data: allEvents } = await supabase
+  // Compute "now" in Bangkok time (UTC+7) regardless of what timezone the
+  // server itself runs in, since that's the timezone all your events are in.
+  const nowBangkok = new Date(Date.now() + 7 * 60 * 60 * 1000);
+  const today = nowBangkok.toISOString().slice(0, 10); // YYYY-MM-DD
+  const nowBangkokStamp = nowBangkok.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM, sorts chronologically as a string
+
+  const { data: rawEvents } = await supabase
     .from("events")
     .select("*")
-    // Hide events that have already happened. Events without a date set
-    // (event_date is null) are kept visible so nothing vanishes by accident.
+    // Coarse filter: definitely-past calendar days are always excluded,
+    // regardless of end time. Events without a date set (event_date is
+    // null) are kept visible so nothing vanishes by accident.
     .or(`event_date.is.null,event_date.gte.${today}`)
     .order("event_date", { ascending: true, nullsFirst: false });
+
+  // Fine filter: for events happening TODAY, also hide them once their
+  // actual end time has passed (falls back to end-of-day if no end time
+  // was set, so this is a no-op for events without one).
+  const allEvents = rawEvents?.filter((ev) => {
+    if (!ev.event_date) return true;
+    const eventEndStamp = `${ev.event_date}T${ev.end_time ? ev.end_time.slice(0, 5) : "23:59"}`;
+    return eventEndStamp >= nowBangkokStamp;
+  });
 
   // Count confirmed tickets per event, so ticket cards can show "X spots
   // left" for events with a capacity set. Only counts bookings made

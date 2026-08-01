@@ -32,6 +32,7 @@ export async function createEvent(formData: FormData) {
   const { day, month } = splitEventDate(eventDate);
   const capacityRaw = String(formData.get("capacity") || "").trim();
   const capacity = capacityRaw ? Number(capacityRaw) : null;
+  const endTime = String(formData.get("end_time") || "").trim() || null;
 
   const { error } = await admin.from("events").insert({
     title: String(formData.get("title") || "").trim(),
@@ -41,6 +42,7 @@ export async function createEvent(formData: FormData) {
     month,
     event_date: eventDate || null,
     capacity,
+    end_time: endTime,
     location: String(formData.get("location") || "").trim(),
     details: String(formData.get("details") || "").trim(),
     description: String(formData.get("description") || "").trim(),
@@ -77,6 +79,7 @@ export async function updateEvent(formData: FormData) {
   const { day, month } = splitEventDate(eventDate);
   const capacityRaw = String(formData.get("capacity") || "").trim();
   const capacity = capacityRaw ? Number(capacityRaw) : null;
+  const endTime = String(formData.get("end_time") || "").trim() || null;
 
   const { error } = await admin
     .from("events")
@@ -88,6 +91,7 @@ export async function updateEvent(formData: FormData) {
       month,
       event_date: eventDate || null,
       capacity,
+    end_time: endTime,
       location: String(formData.get("location") || "").trim(),
       details: String(formData.get("details") || "").trim(),
       description: String(formData.get("description") || "").trim(),

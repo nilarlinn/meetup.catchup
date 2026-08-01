@@ -112,7 +112,11 @@ export default async function AdminDashboard({
         <div className="form-row">
           <label>Event date</label>
           <input name="event_date" type="date" required />
-          <p className="hint">The event disappears from the site automatically the day after this date.</p>
+        </div>
+        <div className="form-row">
+          <label>End time (optional)</label>
+          <input name="end_time" type="time" />
+          <p className="hint">The event disappears from the site right after this time. Leave blank to just hide it at the end of the day instead.</p>
         </div>
         <div className="form-row">
           <label>Capacity (spots available)</label>
@@ -161,6 +165,10 @@ export default async function AdminDashboard({
                     <div className="form-row">
                       <label>Event date</label>
                       <input name="event_date" type="date" defaultValue={ev.event_date || ""} required />
+                    </div>
+                    <div className="form-row">
+                      <label>End time (optional)</label>
+                      <input name="end_time" type="time" defaultValue={ev.end_time || ""} />
                     </div>
                     <div className="form-row">
                       <label>Capacity (spots available)</label>
