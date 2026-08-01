@@ -3,13 +3,39 @@
 import { useState } from "react";
 import { Share2, Check } from "lucide-react";
 
-export default function ShareButton({ title, url }: { title: string; url: string }) {
+export default function ShareButton({
+  title,
+  url,
+  imageUrl,
+}: {
+  title: string;
+  url: string;
+  imageUrl?: string;
+}) {
   const [copied, setCopied] = useState(false);
 
   async function handleShare() {
-    // On phones, this opens the native share sheet — Instagram Stories,
-    // WhatsApp, Messages, etc. all show up there automatically.
     if (typeof navigator !== "undefined" && navigator.share) {
+      // Try sharing the event photo as an actual image file, not just a
+      // link. Instagram's "Add to Story" only shows up as a share option
+      // when there's an image to share — a plain link mostly only offers
+      // Direct Message / WhatsApp / Messages. This mainly works on
+      // Android; iOS support for file sharing varies by version.
+      if (imageUrl && navigator.canShare) {
+        try {
+          const response = await fetch(imageUrl);
+          const blob = await response.blob();
+          const file = new File([blob], "event.jpg", { type: blob.type || "image/jpeg" });
+
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({ title, text: `${title} — ${url}`, files: [file] });
+            return;
+          }
+        } catch {
+          // Image fetch/share failed — fall through to the link-only share below.
+        }
+      }
+
       try {
         await navigator.share({ title, url });
       } catch {

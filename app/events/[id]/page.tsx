@@ -77,6 +77,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
         <ShareButton
           title={event.title}
           url={`${process.env.NEXT_PUBLIC_SITE_URL}/events/${event.id}`}
+          imageUrl={event.image_url || undefined}
         />
       </div>
       <p className="meta meta-row" style={{ marginTop: 10 }}><CalendarDays size={15} /> {event.day} {event.month} · {event.location}</p>
