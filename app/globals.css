@@ -120,6 +120,22 @@ a.brand-block span.brand-sub { display: block; font-family: 'Work Sans', sans-se
   margin: 0 auto 26px;
   font-weight: 300;
 }
+.hero-search-icon-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.hero-search-icon-toggle:hover { background: var(--gold); color: var(--charcoal); border-color: var(--gold); }
+
 .hero-search-minimal {
   display: flex;
   align-items: center;
