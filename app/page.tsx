@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase-server";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { formatTime } from "@/lib/format";
+import { Search } from "lucide-react";
 
 export const revalidate = 0; // always fetch fresh
 
@@ -84,9 +85,12 @@ export default async function HomePage({
           <p className="hero-sub">
             Padel, pickleball, tennis, running and social meetups — curated across the whole country.
           </p>
-          <form action="/" method="GET" className="hero-search hero-search-centered">
+          <form action="/" method="GET" className="hero-search-minimal hero-search-centered">
+            <Search size={18} className="hero-search-minimal-icon" />
             <input type="text" name="q" placeholder="Search events" defaultValue={query} />
-            <button type="submit" className="btn">Search</button>
+            <button type="submit" aria-label="Search">
+              <Search size={16} />
+            </button>
           </form>
         </div>
       </div>
