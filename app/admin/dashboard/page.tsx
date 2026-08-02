@@ -22,16 +22,28 @@ export default async function AdminDashboard({
   // allow-listed admin before this page is ever rendered.
   const admin = createAdminClient();
 
-  const [{ data: events }, { data: submissions }, { data: tickets }, { data: settings }] = await Promise.all([
-    admin.from("events").select("*").order("created_at", { ascending: false }),
-    admin.from("submissions").select("*").order("created_at", { ascending: false }),
-    admin
-      .from("tickets")
-      .select("*, events(title)")
-      .order("created_at", { ascending: false })
-      .limit(100),
-    admin.from("site_settings").select("*").eq("id", 1).single(),
-  ]);
+  const [{ data: events }, { data: submissions }, { data: tickets }, { data: settings }, { data: allTicketRows }] =
+    await Promise.all([
+      admin.from("events").select("*").order("created_at", { ascending: false }),
+      admin.from("submissions").select("*").order("created_at", { ascending: false }),
+      admin
+        .from("tickets")
+        .select("*, events(title)")
+        .order("created_at", { ascending: false })
+        .limit(100),
+      admin.from("site_settings").select("*").eq("id", 1).single(),
+      // Separate, unlimited query just for accurate per-event "Joined"
+      // counts — the "Recent tickets" list above is capped at 100 rows,
+      // which isn't reliable once you have more tickets than that.
+      admin.from("tickets").select("event_id, status"),
+    ]);
+
+  const joinedCounts: Record<string, number> = {};
+  allTicketRows?.forEach((t) => {
+    if (t.status === "paid" || t.status === "free_confirmed") {
+      joinedCounts[t.event_id] = (joinedCounts[t.event_id] || 0) + 1;
+    }
+  });
 
   const pending = submissions?.filter((s) => s.status === "pending") || [];
 
@@ -169,7 +181,7 @@ export default async function AdminDashboard({
       <h2 style={{ marginTop: 40 }}>All events</h2>
       <table className="admin">
         <thead>
-          <tr><th>Title</th><th>Category</th><th>Date</th><th>Price</th><th></th></tr>
+          <tr><th>Title</th><th>Category</th><th>Date</th><th>Price</th><th>Joined</th><th></th></tr>
         </thead>
         <tbody>
           {events?.map((ev) => (
@@ -232,6 +244,10 @@ export default async function AdminDashboard({
               <td>{ev.category}</td>
               <td>{ev.day} {ev.month}</td>
               <td>{Number(ev.price_baht) === 0 ? "Free" : `฿${Number(ev.price_baht).toFixed(0)}`}</td>
+              <td>
+                {joinedCounts[ev.id] || 0}
+                {ev.capacity != null ? ` / ${ev.capacity}` : ""}
+              </td>
               <td>
                 <form action={deleteEvent.bind(null, ev.id)}>
                   <button className="btn ghost" type="submit"><Trash2 size={15} /> Delete</button>
