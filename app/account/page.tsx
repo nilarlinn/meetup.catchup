@@ -23,7 +23,7 @@ export default async function AccountPage() {
   const { data: tickets } = await supabase
     .from("tickets")
     .select("*, events(*)")
-    .eq("email", user!.email)
+    .eq("email", user!.email!.toLowerCase())
     .order("created_at", { ascending: false });
 
   return (

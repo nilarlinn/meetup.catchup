@@ -8,7 +8,7 @@ import { sendTicketConfirmationEmail, sendPaymentPendingEmail, sendManualPayment
 export async function joinEvent(formData: FormData) {
   const eventId = String(formData.get("eventId"));
   const name = String(formData.get("name") || "").trim();
-  const email = String(formData.get("email") || "").trim();
+  const email = String(formData.get("email") || "").trim().toLowerCase();
 
   if (!eventId || !name || !email) {
     throw new Error("Name and email are required.");
@@ -125,7 +125,7 @@ export async function joinEvent(formData: FormData) {
 export async function payByDirectQR(formData: FormData) {
   const eventId = String(formData.get("eventId"));
   const name = String(formData.get("name") || "").trim();
-  const email = String(formData.get("email") || "").trim();
+  const email = String(formData.get("email") || "").trim().toLowerCase();
 
   if (!eventId || !name || !email) {
     throw new Error("Name and email are required.");
