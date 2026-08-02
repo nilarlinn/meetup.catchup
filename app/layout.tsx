@@ -4,6 +4,7 @@ import { CONTACT } from "@/lib/contact";
 import { createClient } from "@/lib/supabase-server";
 import SignOutButton from "@/components/SignOutButton";
 import MobileNav from "@/components/MobileNav";
+import HeroSearch from "@/components/HeroSearch";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
@@ -60,6 +61,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 </a>
               )}
             </MobileNav>
+            <div className="header-search-wrap">
+              <HeroSearch defaultQuery="" variant="header" />
+            </div>
           </div>
         </header>
 
