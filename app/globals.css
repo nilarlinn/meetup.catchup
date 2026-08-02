@@ -81,7 +81,7 @@ a.brand-block span.brand-sub { display: block; font-family: 'Work Sans', sans-se
 .hero {
   background: linear-gradient(150deg, var(--charcoal) 0%, var(--charcoal-soft) 100%);
   color: white;
-  padding: 64px 0 56px;
+  padding: 48px 0 40px;
   position: relative;
   overflow: hidden;
 }
@@ -117,7 +117,7 @@ a.brand-block span.brand-sub { display: block; font-family: 'Work Sans', sans-se
   font-size: 15px;
   color: rgba(255,255,255,0.55);
   max-width: 560px;
-  margin: 0 auto 26px;
+  margin: 0 auto;
   font-weight: 300;
 }
 .hero-search-icon-toggle {

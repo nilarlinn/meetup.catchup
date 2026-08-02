@@ -79,7 +79,7 @@ export default async function HomePage({
       <div className="hero hero-centered">
         <div className="wrap">
           <h1 className="hero-headline">
-            Find what's on <span className="hero-accent">tonight.</span>
+            Find what's on <span className="hero-accent">Today</span>
           </h1>
           <p className="hero-sub">
             Padel, pickleball, tennis, running and social meetups — curated across the whole country.
@@ -88,7 +88,7 @@ export default async function HomePage({
       </div>
 
       <main className="wrap section">
-        <span className="cat" style={{ display: "block", marginBottom: 8 }}>This week</span>
+        <span className="cat" style={{ display: "block", marginBottom: 8 }}>Categories</span>
         <div id="browse" className="filter-row">
           <a href="/" className={`filter-pill ${!activeCategory ? "active" : ""}`}>All</a>
           {CATEGORIES.map((c) => (
