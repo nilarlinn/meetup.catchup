@@ -62,7 +62,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
       .select("id", { count: "exact", head: true })
       .eq("event_id", event.id)
       .in("status", ["paid", "free_confirmed"]);
-    spotsLeft = Math.max(event.capacity - (count || 0), 0);
+    spotsLeft = Math.max(event.capacity - (count || 0) - (event.outside_joined || 0), 0);
   }
   const isSoldOut = spotsLeft === 0;
 
@@ -99,7 +99,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
       </p>
       {spotsLeft !== null && (
         <p className={`meta spots-left ${isSoldOut ? "spots-full" : ""}`} style={{ marginTop: -20, marginBottom: 20 }}>
-          {isSoldOut ? "Sold out" : `${spotsLeft} ${spotsLeft === 1 ? "spot" : "spots"} left`}
+          {isSoldOut ? "Sold out" : `${spotsLeft} of ${event.capacity} spots left`}
         </p>
       )}
 

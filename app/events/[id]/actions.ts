@@ -38,7 +38,7 @@ export async function joinEvent(formData: FormData) {
       .select("id", { count: "exact", head: true })
       .eq("event_id", event.id)
       .in("status", ["paid", "free_confirmed"]);
-    if ((count || 0) >= event.capacity) {
+    if ((count || 0) + (event.outside_joined || 0) >= event.capacity) {
       throw new Error("Sorry, this event is fully booked.");
     }
   }
@@ -149,7 +149,7 @@ export async function payByDirectQR(formData: FormData) {
       .select("id", { count: "exact", head: true })
       .eq("event_id", event.id)
       .in("status", ["paid", "free_confirmed"]);
-    if ((count || 0) >= event.capacity) {
+    if ((count || 0) + (event.outside_joined || 0) >= event.capacity) {
       throw new Error("Sorry, this event is fully booked.");
     }
   }

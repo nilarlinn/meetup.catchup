@@ -224,7 +224,7 @@ export default async function AdminDashboard({
                     <div className="form-row">
                       <label>Spots left</label>
                       {(() => {
-                        const left = ev.capacity != null ? Math.max(ev.capacity - (joinedCounts[ev.id] || 0), 0) : "";
+                        const left = ev.capacity != null ? Math.max(ev.capacity - (joinedCounts[ev.id] || 0) - (ev.outside_joined || 0), 0) : "";
                         return (
                           <>
                             <input type="hidden" name="original_spots_left" value={left} />
@@ -232,7 +232,7 @@ export default async function AdminDashboard({
                           </>
                         );
                       })()}
-                      <p className="hint">Change this to set how many spots the website shows as left (for example, if people joined through LINE or Instagram). Capacity updates to match.</p>
+                      <p className="hint">Change this to set how many spots the website shows as left (for example, if people joined through LINE or Instagram). Capacity stays the same.</p>
                     </div>
                     <div className="form-row">
                       <label>Event photo</label>

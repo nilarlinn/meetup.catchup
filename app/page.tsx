@@ -111,7 +111,7 @@ export default async function HomePage({
         <div className="grid">
           {events?.map((ev) => {
             const booked = bookedCounts[ev.id] || 0;
-            const spotsLeft = ev.capacity != null ? Math.max(ev.capacity - booked, 0) : null;
+            const spotsLeft = ev.capacity != null ? Math.max(ev.capacity - booked - (ev.outside_joined || 0), 0) : null;
             return (
               <a key={ev.id} className="ticket" href={`/events/${ev.id}`}>
                 <div
@@ -132,7 +132,7 @@ export default async function HomePage({
                   <p className="meta">{ev.details}</p>
                   {spotsLeft !== null && (
                     <p className={`meta spots-left ${spotsLeft === 0 ? "spots-full" : ""}`}>
-                      {spotsLeft === 0 ? "Sold out" : `${spotsLeft} ${spotsLeft === 1 ? "spot" : "spots"} left`}
+                      {spotsLeft === 0 ? "Sold out" : `${spotsLeft} of ${ev.capacity} spots left`}
                     </p>
                   )}
                   <div className="ticket-foot">
