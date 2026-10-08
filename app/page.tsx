@@ -132,7 +132,7 @@ export default async function HomePage({
                   <p className="meta">{ev.details}</p>
                   {spotsLeft !== null && (
                     <p className={`meta spots-left ${spotsLeft === 0 ? "spots-full" : ""}`}>
-                      {spotsLeft === 0 ? "Sold out" : `${spotsLeft} of ${ev.capacity} spots left`}
+                      {spotsLeft === 0 ? "Sold out" : `${spotsLeft} ${spotsLeft === 1 ? "spot" : "spots"} left`}
                     </p>
                   )}
                   <div className="ticket-foot">

@@ -81,9 +81,28 @@ export async function updateEvent(formData: FormData) {
   const eventDate = String(formData.get("event_date") || "").trim();
   const { day, month } = splitEventDate(eventDate);
   const capacityRaw = String(formData.get("capacity") || "").trim();
-  const capacity = capacityRaw ? Number(capacityRaw) : null;
+  let capacity = capacityRaw ? Number(capacityRaw) : null;
   const startTime = String(formData.get("start_time") || "").trim() || null;
   const endTime = String(formData.get("end_time") || "").trim() || null;
+
+  // If the admin edited "Spots left", work backwards to the capacity:
+  // capacity = tickets already booked on the website + spots left. This
+  // lets them account for people who joined some other way (LINE, IG,
+  // walk-ins) without a separate database column.
+  const spotsLeftRaw = String(formData.get("spots_left") || "").trim();
+  const originalSpotsLeft = String(formData.get("original_spots_left") || "").trim();
+  if (spotsLeftRaw !== originalSpotsLeft) {
+    if (spotsLeftRaw === "") {
+      capacity = null;
+    } else {
+      const { count } = await admin
+        .from("tickets")
+        .select("id", { count: "exact", head: true })
+        .eq("event_id", id)
+        .in("status", ["paid", "free_confirmed"]);
+      capacity = (count || 0) + Math.max(Number(spotsLeftRaw), 0);
+    }
+  }
 
   const { error } = await admin
     .from("events")
@@ -98,7 +117,6 @@ export async function updateEvent(formData: FormData) {
     start_time: startTime,
     end_time: endTime,
       location: String(formData.get("location") || "").trim(),
-      details: String(formData.get("details") || "").trim(),
       description: String(formData.get("description") || "").trim(),
       image_url: imageUrl,
     })

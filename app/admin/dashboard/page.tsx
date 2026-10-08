@@ -167,7 +167,6 @@ export default async function AdminDashboard({
           <p className="hint">Shows "X spots left" based on tickets booked through this website. Leave blank if there's no cap, or if joining happens through a different app.</p>
         </div>
         <div className="form-row"><label>Location</label><input name="location" placeholder="e.g. Pad Thai Padel Club" /></div>
-        <div className="form-row"><label>Extra details</label><input name="details" /></div>
         <div className="form-row">
           <label>Event photo</label>
           <input name="photo" type="file" accept="image/*" />
@@ -222,7 +221,19 @@ export default async function AdminDashboard({
                       <input name="capacity" type="number" min="0" step="1" defaultValue={ev.capacity ?? ""} placeholder="Leave blank for no limit" />
                     </div>
                     <div className="form-row"><label>Location</label><input name="location" defaultValue={ev.location} /></div>
-                    <div className="form-row"><label>Extra details</label><input name="details" defaultValue={ev.details} /></div>
+                    <div className="form-row">
+                      <label>Spots left</label>
+                      {(() => {
+                        const left = ev.capacity != null ? Math.max(ev.capacity - (joinedCounts[ev.id] || 0), 0) : "";
+                        return (
+                          <>
+                            <input type="hidden" name="original_spots_left" value={left} />
+                            <input name="spots_left" type="number" min="0" step="1" defaultValue={left} placeholder="No limit" />
+                          </>
+                        );
+                      })()}
+                      <p className="hint">Change this to set how many spots the website shows as left (for example, if people joined through LINE or Instagram). Capacity updates to match.</p>
+                    </div>
                     <div className="form-row">
                       <label>Event photo</label>
                       {ev.image_url && (

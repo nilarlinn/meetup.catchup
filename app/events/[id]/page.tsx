@@ -99,7 +99,7 @@ export default async function EventPage({ params }: { params: { id: string } }) 
       </p>
       {spotsLeft !== null && (
         <p className={`meta spots-left ${isSoldOut ? "spots-full" : ""}`} style={{ marginTop: -20, marginBottom: 20 }}>
-          {isSoldOut ? "Sold out" : `${spotsLeft} of ${event.capacity} spots left`}
+          {isSoldOut ? "Sold out" : `${spotsLeft} ${spotsLeft === 1 ? "spot" : "spots"} left`}
         </p>
       )}
 
